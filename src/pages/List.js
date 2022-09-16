@@ -1,15 +1,22 @@
-import React, { useState, useContext, useEffect } from "react";
-import InputField from "../components/inputFiled";
+import React, { useState, useContext, useEffect, Suspense } from "react";
 import ItemDetails from "../components/itemDetails";
 import { AppContext } from "../context/AppContextProvider";
 import { useNavigate } from "react-router-dom";
 import dataBaseManager from "../indexedDbManager";
 import useIsMounted from "../hooks/useIsMounted";
+import CustomBtn from "../components/customBtn";
+import useLongPress from "../hooks/useLongPress";
+import microphoneManager from "../microphoneManager";
+
+const InputField = React.lazy(() => import("../components/inputFiled"));
 
 function List() {
   const [listItems, setListItems] = useState(false);
   const [state, dispatch] = useContext(AppContext);
+  const [showInput, setShowInput] = useState(false);
+  const { action, setAction, handlers } = useLongPress();
   const mounted = useIsMounted();
+  const microphone = new microphoneManager("en-US", true);
   let dbManager = dataBaseManager;
   let navigate = useNavigate();
 
@@ -26,6 +33,7 @@ function List() {
       console.log("Item name already exists!");
       return;
     }
+    console.log(listItems.length + 1);
     const itemToAdd = {
       id: listItems.length + 1,
       name: itemName,
@@ -116,6 +124,38 @@ function List() {
     console.log(response);
   };
 
+  const handleSpeach = () => {
+    if (action === "click") {
+      return;
+    }
+    if (action === "longpress") {
+      microphone.stopMicrophone();
+      setAction("");
+      return;
+    }
+    microphone.startMicrophone();
+    microphone.handleEvent("result", (event) => {
+      const result = event.results; //[event.results.length - 1][0].transcript;
+      for (let i = 0; i < result.length; i++) {
+        addItem(result[i][0].transcript);
+        console.log(result[i][0].transcript);
+      }
+      //microphone.stopMicrophone();
+      //setAction("");
+    });
+    microphone.handleEvent("end", (event) => {
+      console.log("End listen!");
+      microphone.stopMicrophone();
+      setAction("");
+    });
+
+    microphone.handleEvent("error", (event) => {
+      console.log("I didn't recognise that word!");
+      microphone.stopMicrophone();
+      setAction("");
+    });
+  };
+
   useEffect(() => {
     console.log("Render List component");
     if (state.currentList.name !== undefined) {
@@ -145,14 +185,12 @@ function List() {
         {state.currentList.name}{" "}
         <span>({state.currentList.records}) items</span>
       </h1>
-      <InputField placeholder="Add item" handleInputValue={addItem} />
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-        }}
-      >
-        Save
-      </button>
+      {showInput === true && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <InputField placeholder="Add item" handleInputValue={addItem} />
+        </Suspense>
+      )}
+
       {listItems !== false && (
         <ul>
           {listItems.map((item, i) => (
@@ -178,6 +216,25 @@ function List() {
           ))}
         </ul>
       )}
+      <CustomBtn
+        className={`add-new-item ${action}`}
+        onClick={() => {
+          handlers.handleOnClick(() => {
+            if (!showInput) {
+              setShowInput(true);
+            } else {
+              setShowInput(false);
+              setAction("");
+            }
+          });
+        }}
+        onMouseDown={() => {
+          handlers.handleOnMouseDown(handleSpeach);
+        }}
+        onTouchStart={() => {
+          handlers.handleOnTouchStart(handleSpeach);
+        }}
+      />
     </>
   );
 }

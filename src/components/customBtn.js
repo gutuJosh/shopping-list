@@ -6,7 +6,9 @@ function CustomBtn(props) {
       {...props}
       title="Tap for a text note | Tap &amp; hold for a voice note"
     >
-      <span>Add new item</span>
+      <span className="title-default"> + Add new item</span>
+      <span className="title-clicked"> Save</span>
+      <span className="title-audio-end"> Stop</span>
     </div>
   );
 }

@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  useRef,
-  Suspense,
-} from "react";
+import React, { useState, useContext, useEffect, Suspense } from "react";
 import { AppContext } from "../context/AppContextProvider";
 import { useNavigate } from "react-router-dom";
 import dataBaseManager from "../indexedDbManager";
@@ -20,7 +14,7 @@ function Home() {
   const [appStatus, setAppStatus] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const { action, setAction, handlers } = useLongPress();
-  const microphone = new microphoneManager("en-US");
+  const microphone = new microphoneManager("en-US", false);
   let dbManager = dataBaseManager;
   let navigate = useNavigate();
 
@@ -91,6 +85,43 @@ function Home() {
       .catch((err) => console.log(err));
   };
 
+  const handleSpeach = () => {
+    if (action === "click") {
+      return;
+    }
+    if (action === "longpress") {
+      microphone.stopMicrophone();
+      setAction("");
+      return;
+    }
+    microphone.startMicrophone();
+    microphone.handleEvent("result", (event) => {
+      const result = event.results[0][0].transcript;
+      createList(
+        `${result.charAt(0).toUpperCase()}${result.substring(1, result.length)}`
+      );
+      microphone.stopMicrophone();
+      setAction("");
+    });
+    microphone.handleEvent("end", (event) => {
+      console.log("End listen!");
+      console.log(event);
+      microphone.stopMicrophone();
+      setAction("");
+    });
+    microphone.handleEvent("speachend", (event) => {
+      console.log(event);
+      microphone.stopMicrophone();
+      setAction("");
+    });
+
+    microphone.handleEvent("error", (event) => {
+      console.log("I didn't recognise that word!");
+      microphone.stopMicrophone();
+      setAction("");
+    });
+  };
+
   useEffect(() => {
     dbManager.getMetadata().then((response) => {
       console.log(response.results);
@@ -111,10 +142,6 @@ function Home() {
         );
       }
     });
-
-    microphone.handleEvent("start", (event) =>
-      console.log("Ready to listen a voice command!")
-    );
 
     return () => {
       dbManager = null;
@@ -170,11 +197,10 @@ function Home() {
           });
         }}
         onMouseDown={() => {
-          handlers.handleOnMouseDown(() => {
-            console.log("Activate microphone then close");
-            microphone.startMicrophone();
-            setTimeout(() => setAction(""), 2000);
-          });
+          handlers.handleOnMouseDown(handleSpeach);
+        }}
+        onTouchStart={() => {
+          handlers.handleOnTouchStart(handleSpeach);
         }}
       />
     </>

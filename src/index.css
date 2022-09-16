@@ -11,6 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.title-clicked,
+.title-audio-end,
+.title-default {
+  display: none;
+}
 .add-new-item {
   text-align: center;
   background-color: yellow;
@@ -25,12 +30,19 @@ code {
   cursor: pointer;
   transition: all 0.6s ease-in-out;
 }
+.add-new-item .title-default,
+.add-new-item.longpress .title-audio-end,
+.add-new-item.click .title-clicked {
+  display: inline-block;
+}
 .add-new-item.longpress {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   transition: all 0.6s ease-in-out;
 }
-.add-new-item.longpress span {
+.add-new-item.longpress .title-clicked,
+.add-new-item.longpress .title-default,
+.add-new-item.click .title-default {
   display: none;
 }

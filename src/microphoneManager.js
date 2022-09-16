@@ -3,14 +3,14 @@
 /* global window.SpeechRecognitionEvent */
 /* global window.webkitSpeechRecognitionEvent */
 export default class microphoneManager {
-  constructor(language) {
+  constructor(language, continuous) {
     this.speechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     this.speechRecognitionEvent =
       window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
 
     this.recognition = new this.speechRecognition();
-    this.recognition.continuous = false;
+    this.recognition.continuous = continuous;
     this.recognition.lang = language; //'en-US';
     this.recognition.interimResults = false;
     this.recognition.maxAlternatives = 1;
@@ -24,7 +24,7 @@ export default class microphoneManager {
     this.recognition.start();
   }
 
-  stoptMicrophone() {
+  stopMicrophone() {
     this.recognition.stop();
   }
 }

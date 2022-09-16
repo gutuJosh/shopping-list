@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
-let timer;
+
 export default function useLongPress() {
   const [action, setAction] = useState("");
   const isClick = useRef(false);
+  let timer = null;
 
   function startPressTimer(fn) {
     timer = setTimeout(() => {
-      console.log("ref: " + isClick.current);
       if (!isClick.current) {
         setAction("longpress");
         fn();
@@ -20,6 +20,7 @@ export default function useLongPress() {
     }
     setAction("click");
     isClick.current = true;
+    clearTimeout(timer);
     return fn();
   }
 
@@ -29,7 +30,7 @@ export default function useLongPress() {
   }
 
   function handleOnMouseUp(fn) {
-    return fn;
+    return fn();
   }
 
   function handleOnTouchStart(fn) {
@@ -47,7 +48,7 @@ export default function useLongPress() {
     handlers: {
       handleOnClick,
       handleOnMouseDown,
-      handleOnMouseDown,
+      handleOnMouseUp,
       handleOnTouchStart,
       handleOnTouchEnd,
     },
