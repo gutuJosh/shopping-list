@@ -1,17 +1,20 @@
 import { useState, useRef } from "react";
 
-export default function useLongPress() {
+export default function useLongPress(delay = 1000) {
   const [action, setAction] = useState("");
   const isClick = useRef(false);
   let timer = null;
 
   function startPressTimer(fn) {
     timer = setTimeout(() => {
-      if (!isClick.current) {
-        setAction("longpress");
-        fn();
+      if (navigator.onLine) {
+        //spech api cannot be used in offline mode
+        if (!isClick.current) {
+          setAction("longpress");
+          fn();
+        }
       }
-    }, 1000);
+    }, delay);
   }
 
   function handleOnClick(fn) {
@@ -29,17 +32,9 @@ export default function useLongPress() {
     startPressTimer(fn);
   }
 
-  function handleOnMouseUp(fn) {
-    return fn();
-  }
-
   function handleOnTouchStart(fn) {
     isClick.current = false;
     startPressTimer(fn);
-  }
-
-  function handleOnTouchEnd(fn) {
-    return fn;
   }
 
   return {
@@ -48,9 +43,7 @@ export default function useLongPress() {
     handlers: {
       handleOnClick,
       handleOnMouseDown,
-      handleOnMouseUp,
       handleOnTouchStart,
-      handleOnTouchEnd,
     },
   };
 }

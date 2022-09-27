@@ -4,17 +4,18 @@ import { useNavigate } from "react-router-dom";
 import dataBaseManager from "../indexedDbManager";
 import CustomBtn from "../components/customBtn";
 import useLongPress from "../hooks/useLongPress";
-import microphoneManager from "../microphoneManager";
+import useDatabase from "../hooks/useDatabase";
+import useMicrophone from "../hooks/useMicrophone";
 
 const InputField = React.lazy(() => import("../components/inputFiled"));
 
 function Home() {
-  const [lists, setList] = useState([]);
   const [state, dispatch] = useContext(AppContext);
   const [appStatus, setAppStatus] = useState(false);
   const [showInput, setShowInput] = useState(false);
+  const [lists, setList] = useDatabase(state.currentList, dataBaseManager);
   const { action, setAction, handlers } = useLongPress();
-  const microphone = new microphoneManager("en-US", false);
+  const [micResult, dispatchSpeach] = useMicrophone("en-US", false);
   let dbManager = dataBaseManager;
   let navigate = useNavigate();
 
@@ -90,63 +91,32 @@ function Home() {
       return;
     }
     if (action === "longpress") {
-      microphone.stopMicrophone();
+      dispatchSpeach("stop");
       setAction("");
       return;
     }
-    microphone.startMicrophone();
-    microphone.handleEvent("result", (event) => {
-      const result = event.results[0][0].transcript;
-      createList(
-        `${result.charAt(0).toUpperCase()}${result.substring(1, result.length)}`
-      );
-      microphone.stopMicrophone();
-      setAction("");
-    });
-    microphone.handleEvent("end", (event) => {
-      console.log("End listen!");
-      console.log(event);
-      microphone.stopMicrophone();
-      setAction("");
-    });
-    microphone.handleEvent("speachend", (event) => {
-      console.log(event);
-      microphone.stopMicrophone();
-      setAction("");
-    });
-
-    microphone.handleEvent("error", (event) => {
-      console.log("I didn't recognise that word!");
-      microphone.stopMicrophone();
-      setAction("");
-    });
+    dispatchSpeach("start");
   };
 
   useEffect(() => {
-    dbManager.getMetadata().then((response) => {
-      console.log(response.results);
-      if (response.results.length > 0) {
-        //check the store and update records number
-        const getItems = state.currentList.hasOwnProperty("records")
-          ? response.results.map((item) => {
-              if (item.name === state.currentList.name) {
-                item.records = state.currentList.records;
-              }
-              return item;
-            })
-          : response.results;
-        setList(
-          getItems.sort((a, b) => {
-            return b.date - a.date;
-          })
-        );
-      }
-    });
-
     return () => {
       dbManager = null;
     };
-  }, [dbManager]);
+  }, []);
+
+  useEffect(() => {
+    if (micResult !== "") {
+      createList(
+        `${micResult.charAt(0).toUpperCase()}${micResult.substring(
+          1,
+          micResult.length
+        )}`
+      );
+      setTimeout(() => {
+        setAction("");
+      }, 300);
+    }
+  }, [micResult]);
 
   return (
     <>
@@ -160,31 +130,33 @@ function Home() {
           />
         </Suspense>
       )}
-
-      <ul>
-        {lists.map((item, i) => (
-          <li
-            key={i}
-            onClick={() => {
-              editList(item);
-              navigate(
-                `/edit-list/${encodeURIComponent(item.name.toLowerCase())}`
-              );
-            }}
-          >
-            {item.name} ({item.records}) items
-            <span
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteList(item.name);
+      {lists !== false && (
+        <ul>
+          {lists.map((item, i) => (
+            <li
+              key={i}
+              onClick={() => {
+                editList(item);
+                navigate(
+                  `/edit-list/${encodeURIComponent(item.name.toLowerCase())}`
+                );
               }}
             >
-              X
-            </span>
-          </li>
-        ))}
-      </ul>
+              {item.name} ({item.records}) items
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteList(item.name);
+                }}
+              >
+                X
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
       <CustomBtn
+        title="Add new list"
         className={`add-new-item ${action}`}
         onClick={() => {
           handlers.handleOnClick(() => {

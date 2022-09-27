@@ -4,21 +4,27 @@ import { AppContext } from "../context/AppContextProvider";
 import { useNavigate } from "react-router-dom";
 import dataBaseManager from "../indexedDbManager";
 import useIsMounted from "../hooks/useIsMounted";
+import useDatabase from "../hooks/useDatabase";
+import useMicrophone from "../hooks/useMicrophone";
 import CustomBtn from "../components/customBtn";
 import useLongPress from "../hooks/useLongPress";
-import microphoneManager from "../microphoneManager";
 
 const InputField = React.lazy(() => import("../components/inputFiled"));
 
 function List() {
-  const [listItems, setListItems] = useState(false);
   const [state, dispatch] = useContext(AppContext);
   const [showInput, setShowInput] = useState(false);
-  const { action, setAction, handlers } = useLongPress();
+  const [listItems, dispatchList] = useDatabase(
+    state.currentList.name,
+    dataBaseManager
+  );
+  const { action, setAction, handlers } = useLongPress(600);
   const mounted = useIsMounted();
-  const microphone = new microphoneManager("en-US", true);
-  let dbManager = dataBaseManager;
   let navigate = useNavigate();
+  let dbManager = dataBaseManager;
+  const [micResult, dispatchSpeach] = useMicrophone("en-US", true);
+
+  const setListItems = (items) => dispatchList(items);
 
   const addItem = (itemName) => {
     if (itemName === "") {
@@ -33,7 +39,7 @@ function List() {
       console.log("Item name already exists!");
       return;
     }
-    console.log(listItems.length + 1);
+
     const itemToAdd = {
       id: listItems.length + 1,
       name: itemName,
@@ -41,12 +47,13 @@ function List() {
       price: "",
       status: 0,
     };
+
     dbManager
       .insertData(state.currentList.name, itemToAdd)
       .then((resp) => {
         if (resp.status === "ok") {
           console.log(resp);
-          const items = [...listItems];
+          const items = listItems;
           items.push(itemToAdd);
           setListItems(items);
           dispatch({
@@ -128,56 +135,27 @@ function List() {
     if (action === "click") {
       return;
     }
-    if (action === "longpress") {
-      microphone.stopMicrophone();
-      setAction("");
-      return;
-    }
-    microphone.startMicrophone();
-    microphone.handleEvent("result", (event) => {
-      const result = event.results; //[event.results.length - 1][0].transcript;
-      for (let i = 0; i < result.length; i++) {
-        addItem(result[i][0].transcript);
-        console.log(result[i][0].transcript);
-      }
-      //microphone.stopMicrophone();
-      //setAction("");
-    });
-    microphone.handleEvent("end", (event) => {
-      console.log("End listen!");
-      microphone.stopMicrophone();
-      setAction("");
-    });
-
-    microphone.handleEvent("error", (event) => {
-      console.log("I didn't recognise that word!");
-      microphone.stopMicrophone();
-      setAction("");
-    });
+    dispatchSpeach("start");
   };
 
   useEffect(() => {
-    console.log("Render List component");
-    if (state.currentList.name !== undefined) {
-      if (listItems === false) {
-        dbManager.selectData(state.currentList.name).then((resp) => {
-          setListItems([
-            ...resp.results.sort((a, b) => {
-              return a.id - b.id;
-            }),
-          ]);
-        });
-      }
-    } else {
+    if (state.currentList.name === undefined) {
       navigate(`/`);
     }
+
     return () => {
       if (!mounted()) {
         updateMetadata(state.currentList, listItems);
         dbManager = null;
       }
     };
-  }, [dbManager, mounted]);
+  }, [mounted]);
+
+  useEffect(() => {
+    if (micResult !== "") {
+      addItem(micResult);
+    }
+  }, [micResult]);
 
   return (
     <>
@@ -217,6 +195,7 @@ function List() {
         </ul>
       )}
       <CustomBtn
+        title="Add new item"
         className={`add-new-item ${action}`}
         onClick={() => {
           handlers.handleOnClick(() => {
@@ -229,9 +208,21 @@ function List() {
           });
         }}
         onMouseDown={() => {
+          if (action === "longpress") {
+            dispatchSpeach("stop");
+            setTimeout(() => {
+              setAction("");
+            }, 300);
+            return;
+          }
           handlers.handleOnMouseDown(handleSpeach);
         }}
         onTouchStart={() => {
+          if (action === "longpress") {
+            dispatchSpeach("stop");
+            setAction("");
+            return;
+          }
           handlers.handleOnTouchStart(handleSpeach);
         }}
       />
