@@ -1,12 +1,15 @@
 import React, { useState, useContext, useEffect, Suspense } from "react";
-import ItemDetails from "../components/itemDetails";
-import { AppContext } from "../context/AppContextProvider";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useNavigate } from "react-router-dom";
+import ItemDetails from "../components/itemDetails";
+import CheckBox from "../components/checkBox";
+import Filters from "../components/Filters";
+import CustomBtn from "../components/customBtn";
+import { AppContext } from "../context/AppContextProvider";
 import dataBaseManager from "../indexedDbManager";
 import useIsMounted from "../hooks/useIsMounted";
 import useDatabase from "../hooks/useDatabase";
 import useMicrophone from "../hooks/useMicrophone";
-import CustomBtn from "../components/customBtn";
 import useLongPress from "../hooks/useLongPress";
 
 const InputField = React.lazy(() => import("../components/inputFiled"));
@@ -14,6 +17,7 @@ const InputField = React.lazy(() => import("../components/inputFiled"));
 function List() {
   const [state, dispatch] = useContext(AppContext);
   const [showInput, setShowInput] = useState(false);
+  const [itemStatus, setItemStatus] = useState(0);
   const [listItems, dispatchList] = useDatabase(
     state.currentList.name,
     dataBaseManager
@@ -42,7 +46,7 @@ function List() {
 
     const itemToAdd = {
       id: listItems.length + 1,
-      name: itemName,
+      name: itemName.trim(),
       qty: 1,
       price: "",
       status: 0,
@@ -109,13 +113,15 @@ function List() {
   };
 
   const getListStatus = () => {
-    let status = 1;
-    listItems.forEach((item) => {
-      if (item.status === 0) {
+    let status = listItems.length === 0 ? 0 : 1;
+    let compleatedTask = listItems.filter((item) => item.status === 0);
+    if (compleatedTask.length > 0) {
+      status = 0;
+      /*compleatedTask = listItems.filter((item) => item.status === 1);
+      if (compleatedTask.length > 0) {
         status = 0;
-        return status;
-      }
-    });
+      }*/
+    }
     return status;
   };
 
@@ -138,13 +144,20 @@ function List() {
     dispatchSpeach("start");
   };
 
+  const updateItemStatus = () => {
+    return {
+      items: listItems,
+      updateItems: dispatchList,
+      updateTable: updateItem,
+    };
+  };
+
   useEffect(() => {
     if (state.currentList.name === undefined) {
       navigate(`/`);
     }
-
     return () => {
-      if (!mounted()) {
+      if (!mounted() && state.currentList.name !== undefined) {
         updateMetadata(state.currentList, listItems);
         dbManager = null;
       }
@@ -168,30 +181,48 @@ function List() {
           <InputField placeholder="Add item" handleInputValue={addItem} />
         </Suspense>
       )}
-
+      <Filters name="list-items" handleClick={setItemStatus} />
       {listItems !== false && (
         <ul>
-          {listItems.map((item, i) => (
-            <li
-              key={i}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.target.closest("li").classList.toggle("active");
-              }}
-            >
-              <p>
-                <span>{item.name}</span>&nbsp;
-                <span
-                  onClick={() => {
-                    removeItem(item.name);
-                  }}
+          <TransitionGroup className="shopping-list">
+            {listItems.map((item, i) => (
+              <CSSTransition key={`item_${i}`} timeout={500} classNames="item">
+                <li
+                  className={
+                    itemStatus === 1 && item.status !== 1
+                      ? "hide"
+                      : itemStatus === 2 && item.status === 1
+                      ? "hide"
+                      : ""
+                  }
                 >
-                  X
-                </span>
-              </p>
-              <ItemDetails data={item} update={updateItem} />
-            </li>
-          ))}
+                  <CheckBox
+                    {...item}
+                    handleValue={updateItemStatus}
+                    index={i}
+                  />
+                  &nbsp;
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.target.closest("li").classList.toggle("active");
+                    }}
+                  >
+                    ...
+                  </span>
+                  &nbsp;
+                  <span
+                    onClick={() => {
+                      removeItem(item.name);
+                    }}
+                  >
+                    X
+                  </span>
+                  <ItemDetails data={item} update={updateItem} />
+                </li>
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
         </ul>
       )}
       <CustomBtn

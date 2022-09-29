@@ -3,6 +3,7 @@ import { AppContext } from "../context/AppContextProvider";
 import { useNavigate } from "react-router-dom";
 import dataBaseManager from "../indexedDbManager";
 import CustomBtn from "../components/customBtn";
+import Filters from "../components/Filters";
 import useLongPress from "../hooks/useLongPress";
 import useDatabase from "../hooks/useDatabase";
 import useMicrophone from "../hooks/useMicrophone";
@@ -130,6 +131,7 @@ function Home() {
           />
         </Suspense>
       )}
+      <Filters />
       {lists !== false && (
         <ul>
           {lists.map((item, i) => (
@@ -141,6 +143,13 @@ function Home() {
                   `/edit-list/${encodeURIComponent(item.name.toLowerCase())}`
                 );
               }}
+              className={
+                state.listStatus === 1 && state.listStatus !== item.status
+                  ? "hide"
+                  : state.listStatus === 2 && item.status === 1
+                  ? "hide"
+                  : ""
+              }
             >
               {item.name} ({item.records}) items
               <span

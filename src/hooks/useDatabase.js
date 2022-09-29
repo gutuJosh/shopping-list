@@ -10,12 +10,15 @@ const useDatabase = (list, dataBaseManager) => {
 
   useEffect(() => {
     if (typeof list === "object" || list === "") {
+      // if list is empty get all tables
       dataBaseManager.getMetadata().then((response) => {
         if (response.results.length > 0) {
+          //if list is object update last modified table
           const getResults = list.hasOwnProperty("records")
             ? response.results.map((item) => {
                 if (item.name === list.name) {
-                  item.records = list.records;
+                  item.records = list.records; //update total records
+                  item.status = list.status; //update list status
                 }
                 return item;
               })
@@ -36,7 +39,7 @@ const useDatabase = (list, dataBaseManager) => {
         ]);
       });
     }
-  }, [list]);
+  }, []);
 
   return [listItems, dispatchList];
 };

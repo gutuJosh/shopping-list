@@ -57,7 +57,7 @@ const useMicrophone = (language, continuous) => {
 
   useEffect(() => {
     configMic(language, continuous);
-  }, []);
+  }, [language, continuous]);
 
   return [micResult, dispatchSpeach];
 };
