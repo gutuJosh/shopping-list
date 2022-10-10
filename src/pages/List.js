@@ -1,7 +1,14 @@
-import React, { useState, useContext, useEffect, Suspense } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  Suspense,
+  useCallback,
+} from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useNavigate } from "react-router-dom";
 import ItemDetails from "../components/itemDetails";
+import ListItem from "../components/ListItem";
 import CheckBox from "../components/checkBox";
 import Filters from "../components/Filters";
 import CustomBtn from "../components/customBtn";
@@ -14,7 +21,21 @@ import useLongPress from "../hooks/useLongPress";
 
 const InputField = React.lazy(() => import("../components/inputFiled"));
 
+const calculateTotal = (items) => {
+  const total = items.reduce((sum, value) => {
+    let price =
+      value.price === "" ? 0 : Number(value.price) * Number(value.qty);
+    return sum + price;
+  }, 0);
+
+  return new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "EUR",
+  }).format(total);
+};
+
 function List() {
+  let dbManager = dataBaseManager;
   const [state, dispatch] = useContext(AppContext);
   const [showInput, setShowInput] = useState(false);
   const [itemStatus, setItemStatus] = useState(0);
@@ -25,8 +46,8 @@ function List() {
   const { action, setAction, handlers } = useLongPress(600);
   const mounted = useIsMounted();
   let navigate = useNavigate();
-  let dbManager = dataBaseManager;
   const [micResult, dispatchSpeach] = useMicrophone("en-US", true);
+  const totalPrice = useCallback(() => calculateTotal(listItems), [listItems]);
 
   const setListItems = (items) => dispatchList(items);
 
@@ -43,9 +64,14 @@ function List() {
       console.log("Item name already exists!");
       return;
     }
-
+    const itemIndex =
+      listItems.length === 0
+        ? 0
+        : listItems.sort((a, b) => {
+            return b.id - a.id;
+          })[0].id;
     const itemToAdd = {
-      id: listItems.length + 1,
+      id: itemIndex + 1,
       name: itemName.trim(),
       qty: 1,
       price: "",
@@ -60,16 +86,7 @@ function List() {
           const items = listItems;
           items.push(itemToAdd);
           setListItems(items);
-          dispatch({
-            type: "SELECT_LIST",
-            payload: {
-              id: state.currentList.id,
-              name: state.currentList.name,
-              date: state.currentList.date,
-              records: items.length,
-              status: getListStatus(),
-            },
-          });
+          updateMetadata(state.currentList, items);
         }
       })
       .catch((err) => console.log(err));
@@ -86,16 +103,7 @@ function List() {
         if (resp.status === "ok") {
           const items = listItems.filter((item) => item.name !== name);
           setListItems(items);
-          dispatch({
-            type: "SELECT_LIST",
-            payload: {
-              id: state.currentList.id,
-              name: state.currentList.name,
-              date: state.currentList.date,
-              records: items.length,
-              status: getListStatus(),
-            },
-          });
+          updateMetadata(state.currentList, items);
         }
       })
       .catch((err) => console.log(err));
@@ -106,6 +114,16 @@ function List() {
       .updateRow(objName, index, newValue)
       .then((resp) => {
         if (resp.status === "ok") {
+          const getItems = listItems.map((item) => {
+            if (item.id === newValue.id) {
+              item = newValue;
+            }
+            return item;
+          });
+
+          dispatchList(getItems);
+          updateMetadata(state.currentList, getItems);
+        } else {
           console.log(resp);
         }
       })
@@ -117,10 +135,6 @@ function List() {
     let compleatedTask = listItems.filter((item) => item.status === 0);
     if (compleatedTask.length > 0) {
       status = 0;
-      /*compleatedTask = listItems.filter((item) => item.status === 1);
-      if (compleatedTask.length > 0) {
-        status = 0;
-      }*/
     }
     return status;
   };
@@ -134,7 +148,20 @@ function List() {
       status: getListStatus(),
     };
     const response = await dbManager.updateRow("metadata", "name", data);
-    console.log(response);
+    if (response.status === "ok") {
+      dispatch({
+        type: "SELECT_LIST",
+        payload: {
+          id: state.currentList.id,
+          name: state.currentList.name,
+          date: state.currentList.date,
+          records: data.records,
+          status: data.status,
+        },
+      });
+    } else {
+      console.log(response.msg);
+    }
   };
 
   const handleSpeach = () => {
@@ -147,9 +174,42 @@ function List() {
   const updateItemStatus = () => {
     return {
       items: listItems,
-      updateItems: dispatchList,
       updateTable: updateItem,
     };
+  };
+
+  const replaceItems = (from, to) => {
+    const getItems = [...listItems];
+    const getFromItem = listItems.filter((item, i) => i === from);
+    const getToItem = listItems.filter((item, i) => i === to);
+
+    getItems.splice(to, 1, getFromItem[0]);
+    getItems.splice(from, 1, getToItem[0]);
+    const updateItems = getItems.map((item, i) => {
+      item.id = i + 1;
+      return item;
+    });
+
+    updateItems.forEach(async (item, i) => {
+      let newValue = {
+        id: item.id,
+        name: item.name,
+        qty: item.qty,
+        price: item.price,
+        status: item.status,
+      };
+
+      let response = await dbManager.updateRow(
+        state.currentList.name,
+        item.name,
+        newValue
+      );
+      if (response.status !== "ok") {
+        console.log(response.msg);
+      }
+    });
+
+    dispatchList(updateItems);
   };
 
   useEffect(() => {
@@ -158,7 +218,7 @@ function List() {
     }
     return () => {
       if (!mounted() && state.currentList.name !== undefined) {
-        updateMetadata(state.currentList, listItems);
+        //updateMetadata(state.currentList, listItems);
         dbManager = null;
       }
     };
@@ -176,6 +236,7 @@ function List() {
         {state.currentList.name}{" "}
         <span>({state.currentList.records}) items</span>
       </h1>
+      {listItems !== false && <p>Total cost: {totalPrice()}</p>}
       {showInput === true && (
         <Suspense fallback={<div>Loading...</div>}>
           <InputField placeholder="Add item" handleInputValue={addItem} />
@@ -183,47 +244,43 @@ function List() {
       )}
       <Filters name="list-items" handleClick={setItemStatus} />
       {listItems !== false && (
-        <ul>
-          <TransitionGroup className="shopping-list">
-            {listItems.map((item, i) => (
-              <CSSTransition key={`item_${i}`} timeout={500} classNames="item">
-                <li
-                  className={
-                    itemStatus === 1 && item.status !== 1
-                      ? "hide"
-                      : itemStatus === 2 && item.status === 1
-                      ? "hide"
-                      : ""
-                  }
+        <TransitionGroup className="shopping-list" component="ul">
+          {listItems.map((item, i) => (
+            <CSSTransition key={`item_${i}`} timeout={500} classNames="item">
+              <ListItem
+                index={i}
+                handleSwitch={replaceItems}
+                classId={
+                  itemStatus === 1 && item.status !== 1
+                    ? "hide"
+                    : itemStatus === 2 && item.status === 1
+                    ? "hide"
+                    : ""
+                }
+              >
+                <CheckBox {...item} handleValue={updateItemStatus} index={i} />
+                &nbsp;
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.target.closest("li").classList.toggle("active");
+                  }}
                 >
-                  <CheckBox
-                    {...item}
-                    handleValue={updateItemStatus}
-                    index={i}
-                  />
-                  &nbsp;
-                  <span
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.target.closest("li").classList.toggle("active");
-                    }}
-                  >
-                    ...
-                  </span>
-                  &nbsp;
-                  <span
-                    onClick={() => {
-                      removeItem(item.name);
-                    }}
-                  >
-                    X
-                  </span>
-                  <ItemDetails data={item} update={updateItem} />
-                </li>
-              </CSSTransition>
-            ))}
-          </TransitionGroup>
-        </ul>
+                  ...
+                </span>
+                &nbsp;
+                <span
+                  onClick={() => {
+                    removeItem(item.name);
+                  }}
+                >
+                  X
+                </span>
+                <ItemDetails data={item} update={updateItem} />
+              </ListItem>
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
       )}
       <CustomBtn
         title="Add new item"

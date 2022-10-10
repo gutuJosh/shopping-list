@@ -28,7 +28,7 @@ const reducer = (state, action) => {
 
 export const AppContextProvider = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
+
   return (
     <AppContext.Provider value={[state, dispatch]}>
       {props.children}

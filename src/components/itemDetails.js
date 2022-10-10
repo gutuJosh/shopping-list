@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function ItemDetails(props) {
-  const [qty, setQty] = useState(props.data.qty);
-  const [price, setPrice] = useState(props.data.price);
+  const [qty, setQty] = useState();
+  const [price, setPrice] = useState();
+
+  useEffect(() => {
+    setQty(props.data.qty);
+    setPrice(props.data.price);
+  }, [props.data]);
+
   return (
     <div className="item-details">
       <label>
@@ -11,10 +17,9 @@ function ItemDetails(props) {
           type="number"
           value={qty}
           onChange={(e) => {
-            setQty(e.target.value);
+            setQty(Number(e.target.value));
           }}
           onClick={(e) => e.stopPropagation()}
-          readOnly={props.data.status === 1}
         />
       </label>
       <label>
@@ -22,9 +27,8 @@ function ItemDetails(props) {
         <input
           type="number"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => setPrice(Number(e.target.value))}
           onClick={(e) => e.stopPropagation()}
-          readOnly={props.data.status === 1}
         />
       </label>
       <button

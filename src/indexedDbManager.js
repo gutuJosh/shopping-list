@@ -122,19 +122,32 @@ class indexedDbManager {
             msg: "Error! The data was not saved in the db!",
           });
         };
-
+        let req;
         const objectStore = transaction.objectStore(tableName);
-        const req = objectStore.add(value);
-
-        req.onsuccess = (event) => {
-          resolve({ status: "ok", msg: "The message was added!" });
-        };
-        req.onerror = (event) => {
-          reject({
-            status: "ko",
-            msg: event.message,
+        if (Array.isArray(value)) {
+          value.forEach((data) => {
+            req = objectStore.add(data);
+            req.onsuccess = (event) => {
+              //console.log("Item id:" + data.id + "was saved");
+            };
+            req.onerror = (event) => {
+              console.log(
+                "Item id:" + data.id + "was not saved do to " + event.message
+              );
+            };
           });
-        };
+        } else {
+          req = objectStore.add(value);
+          req.onsuccess = (event) => {
+            resolve({ status: "ok", msg: "The message was added!" });
+          };
+          req.onerror = (event) => {
+            reject({
+              status: "ko",
+              msg: event.message,
+            });
+          };
+        }
       };
     });
   }

@@ -11,13 +11,13 @@ import useMicrophone from "../hooks/useMicrophone";
 const InputField = React.lazy(() => import("../components/inputFiled"));
 
 function Home() {
+  let dbManager = dataBaseManager;
   const [state, dispatch] = useContext(AppContext);
   const [appStatus, setAppStatus] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [lists, setList] = useDatabase(state.currentList, dataBaseManager);
   const { action, setAction, handlers } = useLongPress();
   const [micResult, dispatchSpeach] = useMicrophone("en-US", false);
-  let dbManager = dataBaseManager;
   let navigate = useNavigate();
 
   const createList = (listName) => {
@@ -137,6 +137,7 @@ function Home() {
           {lists.map((item, i) => (
             <li
               key={i}
+              data-status={item.status}
               onClick={() => {
                 editList(item);
                 navigate(

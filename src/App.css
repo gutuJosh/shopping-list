@@ -17,8 +17,8 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  height: 300px;
-  max-width: 600px;
+  height: calc(100vh - 67px);
+  max-width: 800px;
   margin: 0 auto;
   background-color: #fff;
   border: 1px solid #efefef;
@@ -62,12 +62,49 @@
 .item-details {
   display: none;
 }
+ul {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+li {
+  list-style: none;
+  padding: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+ul:not(.draggable) li {
+  position: relative;
+  top: inherit !important;
+}
+.shopping-list li {
+  position: absolute;
+  z-index: 1;
+}
 li.active .item-details {
   display: block;
 }
 
+li.dragg-active {
+  position: absolute;
+  background-color: aquamarine;
+  pointer-events: none;
+  z-index: 10;
+}
+
 .hide {
   display: none;
+}
+
+ul.draggable li:not(.dragg-active) {
+  transition: all 0.3s ease-out;
+}
+ul.draggable li.move-down {
+  transform: translateY(32px);
+}
+ul.draggable li.move-up {
+  transform: translateY(-32px);
 }
 
 .item-enter {
@@ -90,4 +127,7 @@ li.active .item-details {
 .item-enter-active,
 .item-exit-active {
   transition: opacity 600ms, transform 600ms;
+}
+.draggme {
+  position: absolute;
 }
