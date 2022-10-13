@@ -1,4 +1,3 @@
-/* global window */
 import React, { useEffect, useState, useRef } from "react";
 let targetIndex = false,
   direction = "",

@@ -14,10 +14,11 @@ import handleDisplay from "../helpers/HandleDisplay";
 import { AppContext } from "../context/AppContextProvider";
 import dataBaseManager from "../indexedDbManager";
 import { useNavigate } from "react-router-dom";
-import useIsMounted from "../hooks/useIsMounted";
+//import useIsMounted from "../hooks/useIsMounted";
 import useDatabase from "../hooks/useDatabase";
 import useMicrophone from "../hooks/useMicrophone";
 import useLongPress from "../hooks/useLongPress";
+import useLanguage from "../hooks/useLanguage";
 
 const InputField = React.lazy(() => import("../components/inputFiled"));
 
@@ -45,11 +46,11 @@ function List() {
     itemStatus
   );
   const { action, setAction, handlers } = useLongPress(600);
-  const mounted = useIsMounted();
+  //const mounted = useIsMounted();
   let navigate = useNavigate();
-  const [micResult, dispatchSpeach] = useMicrophone("en-US", true);
+  const [language] = useLanguage();
+  const [micResult, dispatchSpeach] = useMicrophone(language, true);
   const totalPrice = useCallback(() => calculateTotal(listItems), [listItems]);
-
   const setListItems = (items) => dispatchList(items);
 
   const addItem = (itemName) => {

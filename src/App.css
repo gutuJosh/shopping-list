@@ -103,7 +103,7 @@ li.dragg-active {
   transform: translateX(-100%);
 }
 .all-lists li.show-enter {
-  transition: transform 0.4s ease-out;
+  transition: transform 0.6s ease-out;
 }
 .all-lists li.show {
   transform: translateX(0);

@@ -8,6 +8,8 @@ import Filters from "../components/Filters";
 import useLongPress from "../hooks/useLongPress";
 import useDatabase from "../hooks/useDatabase";
 import useMicrophone from "../hooks/useMicrophone";
+import useLanguage from "../hooks/useLanguage";
+import { useTranslation } from "react-i18next";
 
 const InputField = React.lazy(() => import("../components/inputFiled"));
 
@@ -23,9 +25,10 @@ function Home() {
     filter
   );
   const { action, setAction, handlers } = useLongPress();
-  const [micResult, dispatchSpeach] = useMicrophone("en-US", false);
+  const [language] = useLanguage();
+  const [micResult, dispatchSpeach] = useMicrophone(language, false);
   let navigate = useNavigate();
-
+  const { t } = useTranslation();
   const createList = (listName) => {
     if (listName === "") {
       console.log("List name is empty!");
@@ -146,11 +149,11 @@ function Home() {
   return (
     <>
       {appStatus && <h2>Loading ...</h2>}
-      <h1>Le tue liste</h1>
+      <h1>{t("My Lists")}</h1>
       {showInput === true && (
         <Suspense fallback={<div>Loading...</div>}>
           <InputField
-            placeholder="Insert list name"
+            placeholder={t("Insert list name")}
             handleInputValue={createList}
           />
         </Suspense>

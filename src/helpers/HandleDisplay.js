@@ -21,7 +21,6 @@ const handleDisplay = (delay, status) => {
     if (!item.classList.contains("show")) {
       setTimeout(() => {
         item.classList.add("show", "show-enter");
-        console.log("Show item");
         item.addEventListener("transitionend", handleTransitionEnd);
       }, i * delay);
       i++;

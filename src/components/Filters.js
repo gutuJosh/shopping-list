@@ -1,9 +1,7 @@
-import React, { useState, useContext } from "react";
-import { AppContext } from "../context/AppContextProvider";
+import React, { useState } from "react";
 
 function Filters(props) {
   const [active, setActive] = useState(0);
-  const [state, dispatch] = useContext(AppContext);
 
   const handleOnClick = (e) => {
     e.preventDefault();

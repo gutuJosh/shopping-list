@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 //custom hook outside the component to detect unmount
 const useDatabase = (list, dataBaseManager, filter) => {
