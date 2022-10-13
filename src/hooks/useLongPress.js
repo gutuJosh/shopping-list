@@ -7,8 +7,11 @@ export default function useLongPress(delay = 1000) {
 
   function startPressTimer(fn) {
     timer = setTimeout(() => {
-      if (navigator.onLine) {
-        //spech api cannot be used in offline mode
+      //spech api can be used only when user is online
+      if (
+        navigator.onLine &&
+        (window.SpeechRecognition || window.webkitSpeechRecognition)
+      ) {
         if (!isClick.current) {
           setAction("longpress");
           fn();

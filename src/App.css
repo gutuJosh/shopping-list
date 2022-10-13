@@ -41,6 +41,7 @@ body {
   opacity: 1;
   /*transform: scale(1.1);*/
   transform: translateX(-100%);
+  z-index: 10;
 }
 
 .page-enter-active {
@@ -61,6 +62,9 @@ body {
   /*transform: scale(0.9);*/
   transform: translateX(0);
   transition: opacity 300ms, transform 300ms;
+}
+.page-enter-done {
+  z-index: 1;
 }
 .item-details {
   display: none;
@@ -95,13 +99,23 @@ li.dragg-active {
   pointer-events: none;
   z-index: 10;
 }
-
-.hide {
-  display: none;
+.all-lists li {
+  transform: translateX(-100%);
+}
+.all-lists li.show-enter {
+  transition: transform 0.4s ease-out;
+}
+.all-lists li.show {
+  transform: translateX(0);
+  display: inherit;
+}
+.all-lists li.hide {
+  transition: transform 0.4s ease-out;
+  transform: translateX(100%);
 }
 
 ul.draggable li:not(.dragg-active) {
-  transition: all 0.3s ease-out;
+  transition: transform 0.3s ease-out;
 }
 ul.draggable li.move-down {
   transform: translateY(32px);
@@ -110,27 +124,6 @@ ul.draggable li.move-up {
   transform: translateY(-32px);
 }
 
-.item-enter {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-.item-enter-active {
-  opacity: 1;
-  transform: translateX(0%);
-}
-.item-exit {
-  opacity: 1;
-  transform: translateX(0%);
-}
-.item-exit-active {
-  opacity: 0;
-  transform: translateX(100%);
-}
-
-.item-enter-active,
-.item-exit-active {
-  transition: opacity 600ms, transform 600ms;
-}
 .draggme {
   position: absolute;
 }

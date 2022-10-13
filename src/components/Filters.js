@@ -1,30 +1,38 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { AppContext } from "../context/AppContextProvider";
 
 function Filters(props) {
+  const [active, setActive] = useState(0);
   const [state, dispatch] = useContext(AppContext);
 
   const handleOnClick = (e) => {
     e.preventDefault();
-    if (props.name === "list-items") {
-      props.handleClick(Number(e.target.dataset.key));
-    } else {
-      dispatch({
-        type: "CHANGE_LIST_STATUS",
-        payload: Number(e.target.dataset.key),
-      });
-    }
+    const data = Number(e.target.dataset.key);
+    setActive(data);
+    props.handleClick(data);
   };
 
   return (
     <nav>
-      <button onClick={handleOnClick} data-key="0">
+      <button
+        onClick={handleOnClick}
+        data-key="0"
+        disabled={active === 0 ? true : false}
+      >
         All
       </button>
-      <button onClick={handleOnClick} data-key="1">
+      <button
+        onClick={handleOnClick}
+        data-key="1"
+        disabled={active === 1 ? true : false}
+      >
         Completed
       </button>
-      <button onClick={handleOnClick} data-key="2">
+      <button
+        onClick={handleOnClick}
+        data-key="2"
+        disabled={active === 2 ? true : false}
+      >
         Uncompleted
       </button>
     </nav>

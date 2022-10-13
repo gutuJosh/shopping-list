@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, Suspense } from "react";
 import { AppContext } from "../context/AppContextProvider";
 import { useNavigate } from "react-router-dom";
+import handleDisplay from "../helpers/HandleDisplay";
 import dataBaseManager from "../indexedDbManager";
 import CustomBtn from "../components/customBtn";
 import Filters from "../components/Filters";
@@ -15,7 +16,12 @@ function Home() {
   const [state, dispatch] = useContext(AppContext);
   const [appStatus, setAppStatus] = useState(false);
   const [showInput, setShowInput] = useState(false);
-  const [lists, setList] = useDatabase(state.currentList, dataBaseManager);
+  const [filter, setFilter] = useState(0);
+  const [lists, setList] = useDatabase(
+    state.currentList,
+    dataBaseManager,
+    filter
+  );
   const { action, setAction, handlers } = useLongPress();
   const [micResult, dispatchSpeach] = useMicrophone("en-US", false);
   let navigate = useNavigate();
@@ -42,20 +48,15 @@ function Home() {
     setAppStatus(true);
     dbManager
       .createTable(listName)
+      .then(() => {
+        setAppStatus(false);
+        const getLists = [...lists];
+        getLists.push(newItem);
+        setList(getLists);
+        return dbManager.insertData("metadata", newItem);
+      })
       .then((resp) => {
         console.log(resp);
-        if (resp.status === "ok") {
-          dbManager
-            .insertData("metadata", newItem)
-            .then((resp) => {
-              console.log(resp);
-            })
-            .catch((err) => console.log(err));
-          setAppStatus(false);
-          const getLists = [...lists];
-          getLists.push(newItem);
-          setList(getLists);
-        }
       })
       .catch((err) => console.log(err));
   };
@@ -67,24 +68,34 @@ function Home() {
     });
   };
 
-  const deleteList = (name) => {
+  const deleteList = (e, name) => {
     setAppStatus(true);
-    dbManager
-      .deleteTable(name)
-      .then((resp) => {
-        if (resp.status === "ok") {
-          setAppStatus(false);
-          const getLists = lists.filter((element) => element.name !== name);
-          setList(getLists);
-          if (getLists.length > 0) {
-            dbManager
-              .removeRow("metadata", name)
-              .then((resp) => console.log(resp))
-              .catch((err) => console.log(err));
+    let li = e.target;
+    while (li.tagName !== "LI") {
+      li = e.target.parentNode;
+    }
+    li.classList.add("hide");
+    li.addEventListener("transitionend", () => {
+      li.style.display = "none";
+      li.classList.remove("hide");
+      dbManager
+        .deleteTable(name)
+        .then((resp) => {
+          li.removeAttribute("style");
+          if (resp.status === "ok") {
+            setAppStatus(false);
+            const getLists = lists.filter((element) => element.name !== name);
+            setList(getLists);
+            if (getLists.length > 0) {
+              dbManager
+                .removeRow("metadata", name)
+                .then((resp) => console.log(resp))
+                .catch((err) => console.log(err));
+            }
           }
-        }
-      })
-      .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    });
   };
 
   const handleSpeach = () => {
@@ -99,11 +110,24 @@ function Home() {
     dispatchSpeach("start");
   };
 
+  const handleFilters = (key) => {
+    const getItems = document.querySelectorAll(".all-lists li");
+    getItems.forEach((item) => {
+      item.classList.remove("show", "show-enter");
+    });
+    setFilter(key);
+    dispatch({
+      type: "CHANGE_LIST_STATUS",
+      payload: key,
+    });
+  };
+
   useEffect(() => {
+    handleDisplay(50, filter);
     return () => {
       dbManager = null;
     };
-  }, []);
+  }, [lists]);
 
   useEffect(() => {
     if (micResult !== "") {
@@ -131,9 +155,9 @@ function Home() {
           />
         </Suspense>
       )}
-      <Filters />
+      <Filters handleClick={handleFilters} />
       {lists !== false && (
-        <ul>
+        <ul className="all-lists">
           {lists.map((item, i) => (
             <li
               key={i}
@@ -144,19 +168,12 @@ function Home() {
                   `/edit-list/${encodeURIComponent(item.name.toLowerCase())}`
                 );
               }}
-              className={
-                state.listStatus === 1 && state.listStatus !== item.status
-                  ? "hide"
-                  : state.listStatus === 2 && item.status === 1
-                  ? "hide"
-                  : ""
-              }
             >
               {item.name} ({item.records}) items
               <span
                 onClick={(e) => {
                   e.stopPropagation();
-                  deleteList(item.name);
+                  deleteList(e, item.name);
                 }}
               >
                 X

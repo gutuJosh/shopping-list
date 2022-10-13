@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
 
 //custom hook outside the component to detect unmount
-const useDatabase = (list, dataBaseManager) => {
+const useDatabase = (list, dataBaseManager, filter) => {
   const [listItems, setListItems] = useState(false);
 
   function dispatchList(data) {
-    setListItems(data);
+    if (filter === 1) {
+      setListItems(data.filter((item) => item.status === 1));
+    } else if (filter === 2) {
+      setListItems(data.filter((item) => item.status !== 1));
+    } else {
+      setListItems(data);
+    }
   }
 
   useEffect(() => {
@@ -47,7 +53,7 @@ const useDatabase = (list, dataBaseManager) => {
         ]);
       });
     }
-  }, []);
+  }, [filter]);
 
   return [listItems, dispatchList];
 };

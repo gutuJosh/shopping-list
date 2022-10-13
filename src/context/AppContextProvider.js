@@ -5,6 +5,8 @@ export const AppContext = createContext();
 const initialState = {
   currentList: "",
   listStatus: 0,
+  tables: [],
+  listItems: [],
 };
 
 const reducer = (state, action) => {
@@ -13,12 +15,16 @@ const reducer = (state, action) => {
       return {
         currentList: action.payload,
         listStatus: state.listStatus,
+        tables: state.tables,
+        listItems: state.listItems,
       };
 
     case "CHANGE_LIST_STATUS":
       return {
         currentList: state.currentList,
         listStatus: action.payload,
+        tables: state.tables,
+        listItems: state.listItems,
       };
 
     default:

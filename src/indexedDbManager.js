@@ -246,24 +246,27 @@ class indexedDbManager {
 
       request.onsuccess = (event) => {
         this.db = event.target.result;
-
-        const objectStore = this.db
-          .transaction(tableName)
-          .objectStore(tableName);
-        objectStore.openCursor().onsuccess = (event) => {
-          const cursor = event.target.result;
-          if (cursor) {
-            data.push(cursor.value);
-            cursor.continue();
-          } else {
-            this.db.close();
-            resolve({
-              status: "ok",
-              msg: "Read with success from database",
-              results: data,
-            });
-          }
-        };
+        try {
+          const objectStore = this.db
+            .transaction(tableName)
+            .objectStore(tableName);
+          objectStore.openCursor().onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+              data.push(cursor.value);
+              cursor.continue();
+            } else {
+              this.db.close();
+              resolve({
+                status: "ok",
+                msg: "Read with success from database",
+                results: data,
+              });
+            }
+          };
+        } catch (e) {
+          console.log(e.message);
+        }
       };
     });
   }
@@ -426,11 +429,11 @@ class indexedDbManager {
     return new Promise((resolve, reject) => {
       const DBDeleteRequest = indexedDB.deleteDatabase(dbName);
 
-      DBDeleteRequest.onerror = function (event) {
+      DBDeleteRequest.onerror = function(event) {
         reject("Error deleting database.");
       };
 
-      DBDeleteRequest.onsuccess = function (event) {
+      DBDeleteRequest.onsuccess = function(event) {
         // should be undefined
         if (event.result === undefined) {
           resolve("Database deleted successfully");

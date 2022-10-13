@@ -5,15 +5,15 @@ import React, {
   Suspense,
   useCallback,
 } from "react";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { useNavigate } from "react-router-dom";
 import ItemDetails from "../components/itemDetails";
 import ListItem from "../components/ListItem";
 import CheckBox from "../components/checkBox";
 import Filters from "../components/Filters";
 import CustomBtn from "../components/customBtn";
+import handleDisplay from "../helpers/HandleDisplay";
 import { AppContext } from "../context/AppContextProvider";
 import dataBaseManager from "../indexedDbManager";
+import { useNavigate } from "react-router-dom";
 import useIsMounted from "../hooks/useIsMounted";
 import useDatabase from "../hooks/useDatabase";
 import useMicrophone from "../hooks/useMicrophone";
@@ -41,7 +41,8 @@ function List() {
   const [itemStatus, setItemStatus] = useState(0);
   const [listItems, dispatchList] = useDatabase(
     state.currentList.name,
-    dataBaseManager
+    dataBaseManager,
+    itemStatus
   );
   const { action, setAction, handlers } = useLongPress(600);
   const mounted = useIsMounted();
@@ -64,12 +65,13 @@ function List() {
       console.log("Item name already exists!");
       return;
     }
-    const itemIndex =
-      listItems.length === 0
-        ? 0
-        : listItems.sort((a, b) => {
-            return b.id - a.id;
-          })[0].id;
+    const getMaxId = listItems.reduce((sum, item) => {
+      if (item.id > sum) {
+        sum = item.id;
+      }
+      return sum;
+    }, 0);
+    const itemIndex = listItems.length === 0 ? 0 : getMaxId;
     const itemToAdd = {
       id: itemIndex + 1,
       name: itemName.trim(),
@@ -83,7 +85,7 @@ function List() {
       .then((resp) => {
         if (resp.status === "ok") {
           console.log(resp);
-          const items = listItems;
+          const items = [...listItems];
           items.push(itemToAdd);
           setListItems(items);
           updateMetadata(state.currentList, items);
@@ -92,21 +94,32 @@ function List() {
       .catch((err) => console.log(err));
   };
 
-  const removeItem = (name) => {
+  const removeItem = (e, name) => {
     if (name === "") {
       console.log("Item name can'not be empty!");
       return;
     }
-    dbManager
-      .removeRow(state.currentList.name, name)
-      .then((resp) => {
-        if (resp.status === "ok") {
-          const items = listItems.filter((item) => item.name !== name);
-          setListItems(items);
-          updateMetadata(state.currentList, items);
-        }
-      })
-      .catch((err) => console.log(err));
+
+    let li = e.target;
+    while (li.tagName !== "LI") {
+      li = e.target.parentNode;
+    }
+    li.classList.add("hide");
+    li.addEventListener("transitionend", () => {
+      li.style.display = "none";
+      li.classList.remove("hide");
+      dbManager
+        .removeRow(state.currentList.name, name)
+        .then((resp) => {
+          li.removeAttribute("style");
+          if (resp.status === "ok") {
+            const items = listItems.filter((item) => item.name !== name);
+            setListItems(items);
+            updateMetadata(state.currentList, items);
+          }
+        })
+        .catch((err) => console.log(err));
+    });
   };
 
   const updateItem = (index, newValue, objName = state.currentList.name) => {
@@ -171,6 +184,14 @@ function List() {
     dispatchSpeach("start");
   };
 
+  const handleFilters = (key) => {
+    const getItems = document.querySelectorAll(".all-lists li");
+    getItems.forEach((item) => {
+      item.classList.remove("show", "show-enter");
+    });
+    setItemStatus(key);
+  };
+
   const updateItemStatus = () => {
     return {
       items: listItems,
@@ -213,16 +234,22 @@ function List() {
   };
 
   useEffect(() => {
+    handleDisplay(50, itemStatus);
+  }, [listItems]);
+
+  useEffect(() => {
     if (state.currentList.name === undefined) {
       navigate(`/`);
+      return;
     }
     return () => {
-      if (!mounted() && state.currentList.name !== undefined) {
+      /*if (!mounted() && state.currentList.name !== undefined) {
         //updateMetadata(state.currentList, listItems);
         dbManager = null;
-      }
+      }*/
+      dbManager = null;
     };
-  }, [mounted]);
+  }, []);
 
   useEffect(() => {
     if (micResult !== "") {
@@ -242,45 +269,38 @@ function List() {
           <InputField placeholder="Add item" handleInputValue={addItem} />
         </Suspense>
       )}
-      <Filters name="list-items" handleClick={setItemStatus} />
+      <Filters name="list-items" handleClick={handleFilters} />
       {listItems !== false && (
-        <TransitionGroup className="shopping-list" component="ul">
+        <ul className="shopping-list all-lists">
           {listItems.map((item, i) => (
-            <CSSTransition key={`item_${i}`} timeout={500} classNames="item">
-              <ListItem
-                index={i}
-                handleSwitch={replaceItems}
-                classId={
-                  itemStatus === 1 && item.status !== 1
-                    ? "hide"
-                    : itemStatus === 2 && item.status === 1
-                    ? "hide"
-                    : ""
-                }
+            <ListItem
+              index={i}
+              id={item.id}
+              handleSwitch={replaceItems}
+              key={`listitem_${i}`}
+            >
+              <CheckBox {...item} handleValue={updateItemStatus} index={i} />
+              &nbsp;
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.target.closest("li").classList.toggle("active");
+                }}
               >
-                <CheckBox {...item} handleValue={updateItemStatus} index={i} />
-                &nbsp;
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.target.closest("li").classList.toggle("active");
-                  }}
-                >
-                  ...
-                </span>
-                &nbsp;
-                <span
-                  onClick={() => {
-                    removeItem(item.name);
-                  }}
-                >
-                  X
-                </span>
-                <ItemDetails data={item} update={updateItem} />
-              </ListItem>
-            </CSSTransition>
+                ...
+              </span>
+              &nbsp;
+              <span
+                onClick={(e) => {
+                  removeItem(e, item.name);
+                }}
+              >
+                X
+              </span>
+              <ItemDetails data={item} update={updateItem} />
+            </ListItem>
           ))}
-        </TransitionGroup>
+        </ul>
       )}
       <CustomBtn
         title="Add new item"

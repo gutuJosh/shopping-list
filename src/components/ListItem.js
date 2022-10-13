@@ -1,7 +1,7 @@
 /* global window */
 import React, { useEffect, useState, useRef } from "react";
-let targetIndex = false;
-let direction = "",
+let targetIndex = false,
+  direction = "",
   oldY = 0,
   delay = null,
   touchStartY = 0,
@@ -134,7 +134,6 @@ function ListItem(props) {
       getElement = getElement.parentNode;
     }
     targetIndex = Number(getElement.dataset.index);
-
     if (direction === "bottom") {
       if (getElement.classList.contains("move-down")) {
         getElement.classList.remove("move-down");
@@ -158,7 +157,6 @@ function ListItem(props) {
       );
       if (htmlItem.tagName === "LI") {
         targetIndex = Number(htmlItem.dataset.index);
-
         if (initialDirection === "top") {
           if (direction === "top") {
             if (htmlItem.classList.contains("move-up")) {
@@ -210,6 +208,7 @@ function ListItem(props) {
         clearTimeout(delay);
       }}
       data-index={props.index}
+      data-id={props.id}
     >
       {props.children}
     </li>

@@ -13,7 +13,9 @@ const useMicrophone = (language, continuous) => {
       window.SpeechRecognition || window.webkitSpeechRecognition;
     const speechRecognitionEvent =
       window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
-
+    if (speechRecognition === undefined) {
+      return new Object();
+    }
     microphone.current = new speechRecognition();
     microphone.current.continuous = continuous;
     microphone.current.lang = language; //default en-US;
