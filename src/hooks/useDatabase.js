@@ -32,7 +32,7 @@ const useDatabase = (list, dataBaseManager, filter) => {
               : response.results;
             dispatchList(
               getResults.sort((a, b) => {
-                return b.date - a.date;
+                return a.id - b.id; //b.date - a.date;
               })
             );
           } else {

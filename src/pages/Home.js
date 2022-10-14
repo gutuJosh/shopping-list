@@ -1,17 +1,18 @@
 import React, { useState, useContext, useEffect, Suspense } from "react";
 import { AppContext } from "../context/AppContextProvider";
-import { useNavigate } from "react-router-dom";
 import handleDisplay from "../helpers/HandleDisplay";
 import dataBaseManager from "../indexedDbManager";
-import CustomBtn from "../components/customBtn";
+import CustomBtn from "../components/CustomBtn";
 import Filters from "../components/Filters";
+import RadioButton from "../components/RadioButton";
+import ListItem from "../components/ListItem";
 import useLongPress from "../hooks/useLongPress";
 import useDatabase from "../hooks/useDatabase";
 import useMicrophone from "../hooks/useMicrophone";
 import useLanguage from "../hooks/useLanguage";
 import { useTranslation } from "react-i18next";
 
-const InputField = React.lazy(() => import("../components/inputFiled"));
+const InputField = React.lazy(() => import("../components/InputFiled"));
 
 function Home() {
   let dbManager = dataBaseManager;
@@ -27,8 +28,8 @@ function Home() {
   const { action, setAction, handlers } = useLongPress();
   const [language] = useLanguage();
   const [micResult, dispatchSpeach] = useMicrophone(language, false);
-  let navigate = useNavigate();
   const { t } = useTranslation();
+
   const createList = (listName) => {
     if (listName === "") {
       console.log("List name is empty!");
@@ -41,8 +42,14 @@ function Home() {
       console.log("List name allready exists!");
       return;
     }
+    const getMaxId = lists.reduce((sum, item) => {
+      if (item.id > sum) {
+        sum = item.id;
+      }
+      return sum;
+    }, 0);
     const newItem = {
-      id: lists.length + 1,
+      id: getMaxId + 1,
       name: listName,
       date: Date.now(),
       records: 0,
@@ -62,13 +69,6 @@ function Home() {
         console.log(resp);
       })
       .catch((err) => console.log(err));
-  };
-
-  const editList = (obj) => {
-    dispatch({
-      type: "SELECT_LIST",
-      payload: obj,
-    });
   };
 
   const deleteList = (e, name) => {
@@ -99,6 +99,36 @@ function Home() {
         })
         .catch((err) => console.log(err));
     });
+  };
+
+  const replaceItems = (from, to) => {
+    const getItems = [...lists];
+    const getFromItem = lists.filter((item, i) => i === from);
+    const getToItem = lists.filter((item, i) => i === to);
+
+    getItems.splice(to, 1, getFromItem[0]);
+    getItems.splice(from, 1, getToItem[0]);
+    const updateItems = getItems.map((item, i) => {
+      item.id = i + 1;
+      return item;
+    });
+
+    updateItems.forEach(async (item, i) => {
+      let newValue = {
+        id: item.id,
+        name: item.name,
+        date: item.date,
+        records: item.records,
+        status: item.status,
+      };
+
+      let response = await dbManager.updateRow("metadata", item.name, newValue);
+      if (response.status !== "ok") {
+        console.log(response.msg);
+      }
+    });
+
+    setList(updateItems);
   };
 
   const handleSpeach = () => {
@@ -162,17 +192,13 @@ function Home() {
       {lists !== false && (
         <ul className="all-lists">
           {lists.map((item, i) => (
-            <li
-              key={i}
-              data-status={item.status}
-              onClick={() => {
-                editList(item);
-                navigate(
-                  `/edit-list/${encodeURIComponent(item.name.toLowerCase())}`
-                );
-              }}
+            <ListItem
+              index={i}
+              id={item.id}
+              handleSwitch={replaceItems}
+              key={`listitem_${i}`}
             >
-              {item.name} ({item.records}) items
+              <RadioButton {...item} />
               <span
                 onClick={(e) => {
                   e.stopPropagation();
@@ -181,7 +207,7 @@ function Home() {
               >
                 X
               </span>
-            </li>
+            </ListItem>
           ))}
         </ul>
       )}

@@ -5,11 +5,11 @@ import React, {
   Suspense,
   useCallback,
 } from "react";
-import ItemDetails from "../components/itemDetails";
+import ItemDetails from "../components/ItemDetails";
 import ListItem from "../components/ListItem";
-import CheckBox from "../components/checkBox";
+import CheckBox from "../components/CheckBox";
 import Filters from "../components/Filters";
-import CustomBtn from "../components/customBtn";
+import CustomBtn from "../components/CustomBtn";
 import handleDisplay from "../helpers/HandleDisplay";
 import { AppContext } from "../context/AppContextProvider";
 import dataBaseManager from "../indexedDbManager";
@@ -20,7 +20,7 @@ import useMicrophone from "../hooks/useMicrophone";
 import useLongPress from "../hooks/useLongPress";
 import useLanguage from "../hooks/useLanguage";
 
-const InputField = React.lazy(() => import("../components/inputFiled"));
+const InputField = React.lazy(() => import("../components/InputFiled"));
 
 const calculateTotal = (items) => {
   const total = items.reduce((sum, value) => {
@@ -72,9 +72,9 @@ function List() {
       }
       return sum;
     }, 0);
-    const itemIndex = listItems.length === 0 ? 0 : getMaxId;
+
     const itemToAdd = {
-      id: itemIndex + 1,
+      id: getMaxId + 1,
       name: itemName.trim(),
       qty: 1,
       price: "",

@@ -4,6 +4,14 @@ function ItemDetails(props) {
   const [qty, setQty] = useState();
   const [price, setPrice] = useState();
 
+  const formatValue = (data) => {
+    let getValue = data.replace(/[a-zA-Z]/g, "").replace(/,/g, ".");
+    if (isNaN(getValue)) {
+      getValue = 0;
+    }
+    return getValue;
+  };
+
   useEffect(() => {
     setQty(props.data.qty);
     setPrice(props.data.price);
@@ -12,22 +20,20 @@ function ItemDetails(props) {
   return (
     <div className="item-details">
       <label>
-        Quantity:
+        Items number:
         <input
-          type="number"
+          type="text"
           value={qty}
-          onChange={(e) => {
-            setQty(Number(e.target.value));
-          }}
+          onChange={(e) => setQty(formatValue(e.target.value))}
           onClick={(e) => e.stopPropagation()}
         />
       </label>
       <label>
-        Price:
+        Price per item:
         <input
-          type="number"
+          type="text"
           value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
+          onChange={(e) => setPrice(formatValue(e.target.value))}
           onClick={(e) => e.stopPropagation()}
         />
       </label>
