@@ -1,7 +1,14 @@
 import React from "react";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
+import Header from "./components/Header";
 
-const PageContainer = (WrappedComponent, keyProp, inProp, callback) => {
+const PageContainer = (
+  WrappedComponent,
+  keyProp,
+  inProp,
+  callback,
+  handleMenu
+) => {
   return (
     <SwitchTransition mode="in-out">
       <CSSTransition
@@ -13,6 +20,7 @@ const PageContainer = (WrappedComponent, keyProp, inProp, callback) => {
         onExiting={callback}
       >
         <div className="page">
+          <Header handleActive={handleMenu} />
           <WrappedComponent />
         </div>
       </CSSTransition>

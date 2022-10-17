@@ -190,7 +190,7 @@ function Home() {
       )}
       <Filters handleClick={handleFilters} />
       {lists !== false && (
-        <ul className="all-lists">
+        <ul className="shopping-list all-lists">
           {lists.map((item, i) => (
             <ListItem
               index={i}

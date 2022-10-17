@@ -296,7 +296,9 @@ function List() {
                   removeItem(e, item.name);
                 }}
               >
-                X
+                <svg className="icn" title="Delete">
+                  <use href="#trash-icon"></use>
+                </svg>
               </span>
               <ItemDetails data={item} update={updateItem} />
             </ListItem>
