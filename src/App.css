@@ -490,7 +490,14 @@ ul.draggable li.move-up {
   display: inline-block;
   cursor: pointer;
 }
-
+footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  background-color: var(--dark-grey);
+}
 .add-new-item {
   text-align: center;
   background-color: var(--yellow);
@@ -499,25 +506,52 @@ ul.draggable li.move-up {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  line-height: 80px;
   border-radius: var(--border-radius);
   cursor: pointer;
   transition: all 0.6s ease-in-out;
+  transform-origin: center;
+  font-weight: bold;
+  font-size: 1.6rem;
+  height: 80px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+}
+.add-new-item span {
+  line-height: 80px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .add-new-item .title-default,
 .add-new-item.longpress .title-audio-end,
 .add-new-item.click .title-clicked {
   display: inline-block;
 }
+.add-new-item.longpress.animated {
+  animation: pulse 2s infinite;
+}
+
+.add-new-item.longpress .title-audio-end .icn {
+  width: 20px;
+  height: 20px;
+  top: 4px;
+  left: 2px;
+  position: relative;
+}
+
 .add-new-item.longpress {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   transition: all 0.6s ease-in-out;
+  transform-origin: center;
 }
 .add-new-item.longpress .title-clicked,
 .add-new-item.longpress .title-default,
-.add-new-item.click .title-default {
+.add-new-item.click .title-default,
+.add-new-item .title-clicked,
+.add-new-item .title-audio-end {
   display: none;
 }
 
@@ -582,4 +616,21 @@ ul.draggable li.move-up {
 .custom-check input:checked ~ span.txt {
   text-decoration: line-through;
   color: var(--font-grey);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 177, 66, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 20px rgba(255, 177, 66, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(255, 177, 66, 0);
+  }
 }
