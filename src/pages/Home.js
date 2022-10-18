@@ -74,8 +74,8 @@ function Home() {
   const deleteList = (e, name) => {
     setAppStatus(true);
     let li = e.target;
-    while (li.tagName !== "LI") {
-      li = e.target.parentNode;
+    if (li.tagName !== "LI") {
+      li = e.target.closest("li");
     }
     li.classList.add("hide");
     li.addEventListener("transitionend", () => {
@@ -198,15 +198,21 @@ function Home() {
               handleSwitch={replaceItems}
               key={`listitem_${i}`}
             >
-              <RadioButton {...item} />
-              <span
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteList(e, item.name);
-                }}
-              >
-                X
-              </span>
+              <div className="flex">
+                <RadioButton {...item} />
+                <div>
+                  <svg
+                    className="icn"
+                    title="Delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteList(e, item.name);
+                    }}
+                  >
+                    <use href="#trash-icon"></use>
+                  </svg>
+                </div>
+              </div>
             </ListItem>
           ))}
         </ul>

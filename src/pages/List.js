@@ -102,8 +102,8 @@ function List() {
     }
 
     let li = e.target;
-    while (li.tagName !== "LI") {
-      li = e.target.parentNode;
+    if (li.tagName !== "LI") {
+      li = e.target.closest("li");
     }
     li.classList.add("hide");
     li.addEventListener("transitionend", () => {
@@ -280,26 +280,34 @@ function List() {
               handleSwitch={replaceItems}
               key={`listitem_${i}`}
             >
-              <CheckBox {...item} handleValue={updateItemStatus} index={i} />
-              &nbsp;
-              <span
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.target.closest("li").classList.toggle("active");
-                }}
-              >
-                ...
-              </span>
-              &nbsp;
-              <span
-                onClick={(e) => {
-                  removeItem(e, item.name);
-                }}
-              >
-                <svg className="icn" title="Delete">
-                  <use href="#trash-icon"></use>
-                </svg>
-              </span>
+              <div className="flex">
+                <CheckBox {...item} handleValue={updateItemStatus} index={i} />
+
+                <div className="pad-x-10 txt-center">
+                  <svg
+                    className="icn"
+                    title="Dettails"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.target.closest("li").classList.toggle("active");
+                    }}
+                  >
+                    <use href="#elipsis-icon"></use>
+                  </svg>
+                </div>
+
+                <div>
+                  <svg
+                    className="icn"
+                    title="Delete"
+                    onClick={(e) => {
+                      removeItem(e, item.name);
+                    }}
+                  >
+                    <use href="#trash-icon"></use>
+                  </svg>
+                </div>
+              </div>
               <ItemDetails data={item} update={updateItem} />
             </ListItem>
           ))}

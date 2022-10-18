@@ -6,13 +6,13 @@ function Header(props) {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(location);
+    //console.log(location);
   }, []);
 
   return (
     <>
-      <header className="menu-container pad20">
-        <nav className="nav">
+      <header className="menu-container">
+        <nav className="main-nav">
           <ul className="flex">
             <li>
               {location.pathname !== "/" && (

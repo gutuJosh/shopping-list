@@ -198,7 +198,7 @@ function ListItem(props) {
     <li
       ref={element}
       style={styles}
-      className={props.classId}
+      className={`${props.classId}`}
       onMouseDown={handleMouseDown}
       onMouseUp={() => clearTimeout(delay)}
       onTouchStart={handleMouseDown}

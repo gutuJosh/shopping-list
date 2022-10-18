@@ -11,11 +11,12 @@ function Filters(props) {
   };
 
   return (
-    <nav>
+    <nav className="filters-container mtop20">
       <button
         onClick={handleOnClick}
         data-key="0"
         disabled={active === 0 ? true : false}
+        className="pad-x-10"
       >
         All
       </button>
@@ -23,6 +24,7 @@ function Filters(props) {
         onClick={handleOnClick}
         data-key="1"
         disabled={active === 1 ? true : false}
+        className="pad-x-10 inline-block"
       >
         Completed
       </button>
@@ -30,6 +32,7 @@ function Filters(props) {
         onClick={handleOnClick}
         data-key="2"
         disabled={active === 2 ? true : false}
+        className="pad-x-10"
       >
         Uncompleted
       </button>
