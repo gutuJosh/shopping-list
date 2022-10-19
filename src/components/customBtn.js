@@ -34,15 +34,16 @@ function CustomBtn(props) {
 
   return (
     <footer>
-      <div {...props} title={label} ref={element}>
-        <span className="title-default"> + {props.title}</span>
+      <button {...props} ref={element}>
+        <span className="title-default">+ {props.title}</span>
         <span className="title-clicked"> Save</span>
         <span className="title-audio-end">
           <svg className="icn">
             <use href="#microphone-icon"></use>
           </svg>
         </span>
-      </div>
+      </button>
+      <div className="btn-label">{label}</div>
     </footer>
   );
 }

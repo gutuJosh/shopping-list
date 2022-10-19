@@ -1,4 +1,10 @@
-import React, { useState, useContext, useEffect, Suspense } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+  Suspense,
+} from "react";
 import { AppContext } from "../context/AppContextProvider";
 import handleDisplay from "../helpers/HandleDisplay";
 import dataBaseManager from "../indexedDbManager";
@@ -20,6 +26,7 @@ function Home() {
   const [appStatus, setAppStatus] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [filter, setFilter] = useState(0);
+  const shoppingList = useRef(null);
   const [lists, setList] = useDatabase(
     state.currentList,
     dataBaseManager,
@@ -63,6 +70,10 @@ function Home() {
         const getLists = [...lists];
         getLists.push(newItem);
         setList(getLists);
+        shoppingList.current.scrollTo(
+          0,
+          shoppingList.current.scrollHeight + 100
+        );
         return dbManager.insertData("metadata", newItem);
       })
       .then((resp) => {
@@ -164,15 +175,19 @@ function Home() {
 
   useEffect(() => {
     if (micResult !== "") {
-      createList(
-        `${micResult.charAt(0).toUpperCase()}${micResult.substring(
-          1,
-          micResult.length
-        )}`
-      );
-      setTimeout(() => {
+      if (micResult === "roger over") {
         setAction("");
-      }, 300);
+      } else {
+        createList(
+          `${micResult.charAt(0).toUpperCase()}${micResult.substring(
+            1,
+            micResult.length
+          )}`
+        );
+        setTimeout(() => {
+          setAction("");
+        }, 300);
+      }
     }
   }, [micResult]);
 
@@ -190,7 +205,7 @@ function Home() {
       )}
       <Filters handleClick={handleFilters} />
       {lists !== false && (
-        <ul className="shopping-list all-lists">
+        <ul className="shopping-list all-lists" ref={shoppingList}>
           {lists.map((item, i) => (
             <ListItem
               index={i}
@@ -231,9 +246,15 @@ function Home() {
           });
         }}
         onMouseDown={() => {
+          if (action === "click") {
+            return;
+          }
           handlers.handleOnMouseDown(handleSpeach);
         }}
         onTouchStart={() => {
+          if (action === "click") {
+            return;
+          }
           handlers.handleOnTouchStart(handleSpeach);
         }}
       />

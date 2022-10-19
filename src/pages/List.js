@@ -2,6 +2,7 @@ import React, {
   useState,
   useContext,
   useEffect,
+  useRef,
   Suspense,
   useCallback,
 } from "react";
@@ -40,6 +41,7 @@ function List() {
   const [state, dispatch] = useContext(AppContext);
   const [showInput, setShowInput] = useState(false);
   const [itemStatus, setItemStatus] = useState(0);
+  const shoppingList = useRef(null);
   const [listItems, dispatchList] = useDatabase(
     state.currentList.name,
     dataBaseManager,
@@ -90,6 +92,10 @@ function List() {
           items.push(itemToAdd);
           setListItems(items);
           updateMetadata(state.currentList, items);
+          shoppingList.current.scrollTo(
+            0,
+            shoppingList.current.scrollHeight + 100
+          );
         }
       })
       .catch((err) => console.log(err));
@@ -254,7 +260,11 @@ function List() {
 
   useEffect(() => {
     if (micResult !== "") {
-      addItem(micResult);
+      if (micResult === "roger over") {
+        setAction("");
+      } else {
+        addItem(micResult);
+      }
     }
   }, [micResult]);
 
@@ -272,7 +282,7 @@ function List() {
       )}
       <Filters name="list-items" handleClick={handleFilters} />
       {listItems !== false && (
-        <ul className="shopping-list all-lists">
+        <ul className="shopping-list all-lists" ref={shoppingList}>
           {listItems.map((item, i) => (
             <ListItem
               index={i}
@@ -334,12 +344,18 @@ function List() {
             }, 300);
             return;
           }
+          if (action === "click") {
+            return;
+          }
           handlers.handleOnMouseDown(handleSpeach);
         }}
         onTouchStart={() => {
           if (action === "longpress") {
             dispatchSpeach("stop");
             setAction("");
+            return;
+          }
+          if (action === "click") {
             return;
           }
           handlers.handleOnTouchStart(handleSpeach);

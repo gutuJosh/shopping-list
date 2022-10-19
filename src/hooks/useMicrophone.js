@@ -32,17 +32,18 @@ const useMicrophone = (language, continuous) => {
 
     microphone.current.addEventListener("end", (event) => {
       microphone.current.stop();
-      console.log("End event fired!");
+      //console.log("End event fired!");
+      dispatchSpeach("roger over");
     });
 
     microphone.current.addEventListener("error", (event) => {
       microphone.current.stop();
-      console.log("I didn't recognise that word!");
+      //console.log("I didn't recognise that word!");
+      dispatchSpeach("not roger");
     });
   }
 
   function dispatchSpeach(data) {
-    console.log("Im in dispatcher..." + data);
     switch (data) {
       case "start":
         microphone.current.start();

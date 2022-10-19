@@ -405,6 +405,7 @@ ul {
   overflow-x: hidden;
   margin-top: 20px;
   scrollbar-width: thin;
+  padding-bottom: 100px;
 }
 .shopping-list::-webkit-scrollbar {
   width: 5px;
@@ -499,6 +500,7 @@ footer {
   background-color: var(--dark-grey);
 }
 .add-new-item {
+  border: none;
   text-align: center;
   background-color: var(--yellow);
   color: var(--dark-grey);
@@ -556,7 +558,7 @@ footer {
   display: none;
 }
 
-.add-new-item:not(.longpress):before {
+.btn-label {
   content: attr(title);
   display: block;
   width: calc(100% - 40px);
@@ -569,14 +571,17 @@ footer {
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  transition: position 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
   z-index: 0;
 }
 
-.add-new-item:hover:before {
+.add-new-item:hover ~ .btn-label {
   top: -40px;
 }
-
+.add-new-item.longpress ~ .btn-label,
+.add-new-item.click ~ .btn-label {
+  display: none;
+}
 /*Custom checkbox/radio buttons*/
 
 .custom-check {
@@ -638,6 +643,25 @@ footer {
 .custom-check input:checked ~ span.txt {
   text-decoration: line-through;
   color: var(--font-grey);
+}
+
+.new-item-container {
+  width: 100%;
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background-color: var(--yellow);
+  transition: all 0.3s ease-out;
+  z-index: 1;
+}
+.new-item-container.active {
+  top: 85px;
+}
+.new-item-container input {
+  width: 100%;
+  height: 50px;
+  background-color: var(--dark-grey);
+  color: #fff;
 }
 
 @keyframes pulse {
