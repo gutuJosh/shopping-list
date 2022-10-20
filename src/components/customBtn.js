@@ -36,7 +36,7 @@ function CustomBtn(props) {
     <footer>
       <button {...props} ref={element}>
         <span className="title-default">+ {props.title}</span>
-        <span className="title-clicked"> Save</span>
+        <span className="title-clicked">Save</span>
         <span className="title-audio-end">
           <svg className="icn">
             <use href="#microphone-icon"></use>
