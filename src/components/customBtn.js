@@ -1,5 +1,5 @@
 /* global navigator */
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function CustomBtn(props) {
   const element = useRef(null);
@@ -22,14 +22,6 @@ function CustomBtn(props) {
         ? `Tap for a text note | Tap & hold for a voice note`
         : `Tap for a text note`
     );
-
-    return () => {
-      try {
-        element.current.removeEventListener("transitionend", addAnimation);
-      } catch (e) {
-        //
-      }
-    };
   }, []);
 
   return (
