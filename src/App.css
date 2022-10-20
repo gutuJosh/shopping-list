@@ -319,7 +319,8 @@ h1 {
   font-size: 3rem;
 }
 
-.filters-container button {
+.filters-container button,
+.item-details button {
   border-radius: 6px;
   background-color: transparent;
   border: 1px solid var(--font-grey);
@@ -392,7 +393,27 @@ h1 {
   line-height: 8rem;
 }
 .item-details {
-  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease-out;
+}
+.item-details button {
+  transform: translateY(40px);
+  background-color: var(--yellow);
+  border: none;
+  color: var(--dark-grey);
+}
+.item-details button:hover {
+  border-color: #fff;
+  color: #fff;
+}
+.item-details label {
+  color: var(--font-grey);
+}
+.item-details input {
+  width: 100%;
+  background-color: var(--dark-grey);
+  color: var(--font-grey);
 }
 ul {
   margin: 0;
@@ -431,7 +452,8 @@ ul:not(.draggable) li {
   line-height: 40px;
 }
 li.active .item-details {
-  display: block;
+  max-height: 1000px;
+  margin-bottom: 20px;
 }
 
 li.dragg-active {
