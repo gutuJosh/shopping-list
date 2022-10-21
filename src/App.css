@@ -80,6 +80,10 @@ a {
   text-align: center;
 }
 
+.txt-right {
+  text-align: right;
+}
+
 /****Float****/
 .f-left {
   float: left;
@@ -398,7 +402,6 @@ h1 {
   transition: all 0.4s ease-out;
 }
 .item-details button {
-  transform: translateY(40px);
   background-color: var(--yellow);
   border: none;
   color: var(--dark-grey);
@@ -408,10 +411,16 @@ h1 {
   color: #fff;
 }
 .item-details label {
+  position: relative;
   color: var(--font-grey);
+}
+.item-details label span {
+  position: absolute;
+  top: -35px;
 }
 .item-details input {
   width: 100%;
+  height: 40px;
   background-color: var(--dark-grey);
   color: var(--font-grey);
 }
@@ -453,6 +462,7 @@ ul:not(.draggable) li {
 }
 li.active .item-details {
   max-height: 1000px;
+  padding-top: 40px;
   margin-bottom: 20px;
 }
 
@@ -572,6 +582,7 @@ footer {
   transition: all 0.6s ease-in-out;
   transform-origin: center;
 }
+
 .add-new-item.longpress .title-clicked,
 .add-new-item.longpress .title-default,
 .add-new-item.click .title-default,
@@ -684,6 +695,58 @@ footer {
   height: 50px;
   background-color: var(--dark-grey);
   color: #fff;
+}
+
+.setting-list .item-details label {
+  height: 40px;
+}
+.setting-list li.active .item-details {
+  margin: 20px 0 0 0;
+}
+
+input.switch {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+.switch-container {
+  height: 30px;
+}
+input.switch + label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 60px;
+  height: 30px;
+  background: var(--dark-grey);
+  display: block;
+  border-radius: 100px;
+  position: relative;
+  top: -34px;
+}
+
+input.switch + label:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  background: #f1f1f1;
+  border-radius: 90px;
+  transition: 0.3s;
+}
+
+input.switch:checked + label {
+  background: var(--yellow);
+}
+
+input.switch:checked + label:after {
+  left: 100%;
+  transform: translateX(-100%);
+}
+
+input.switch + label:active:after {
+  width: 40px;
 }
 
 @keyframes pulse {

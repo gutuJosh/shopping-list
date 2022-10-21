@@ -1,7 +1,7 @@
 /* global navigator */
 import { useEffect, useRef, useState } from "react";
 
-function CustomBtn(props) {
+function SaveBtn(props) {
   const element = useRef(null);
   const [loaded, setLoaded] = useState(false);
   const [label, setLabel] = useState(
@@ -26,7 +26,7 @@ function CustomBtn(props) {
 
   return (
     <footer>
-      <button {...props} ref={element}>
+      <button {...props} ref={element} title={label}>
         <span className="title-default">+ {props.title}</span>
         <span className="title-clicked">Save</span>
         <span className="title-audio-end">
@@ -40,4 +40,4 @@ function CustomBtn(props) {
   );
 }
 
-export default CustomBtn;
+export default SaveBtn;

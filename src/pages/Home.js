@@ -8,7 +8,7 @@ import React, {
 import { AppContext } from "../context/AppContextProvider";
 import handleDisplay from "../helpers/HandleDisplay";
 import dataBaseManager from "../indexedDbManager";
-import CustomBtn from "../components/CustomBtn";
+import SaveBtn from "../components/SaveBtn";
 import Filters from "../components/Filters";
 import RadioButton from "../components/RadioButton";
 import ListItem from "../components/ListItem";
@@ -175,7 +175,7 @@ function Home() {
 
   useEffect(() => {
     if (micResult !== "") {
-      if (micResult === "roger over") {
+      if (micResult === "roger over" || micResult === "not roger") {
         setAction("");
       } else {
         createList(
@@ -232,7 +232,7 @@ function Home() {
           ))}
         </ul>
       )}
-      <CustomBtn
+      <SaveBtn
         title="Add new list"
         className={`add-new-item ${action}`}
         onClick={() => {

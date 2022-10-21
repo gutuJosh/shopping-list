@@ -10,7 +10,7 @@ import ItemDetails from "../components/ItemDetails";
 import ListItem from "../components/ListItem";
 import CheckBox from "../components/CheckBox";
 import Filters from "../components/Filters";
-import CustomBtn from "../components/CustomBtn";
+import SaveBtn from "../components/SaveBtn";
 import handleDisplay from "../helpers/HandleDisplay";
 import { AppContext } from "../context/AppContextProvider";
 import dataBaseManager from "../indexedDbManager";
@@ -260,7 +260,7 @@ function List() {
 
   useEffect(() => {
     if (micResult !== "") {
-      if (micResult === "roger over") {
+      if (micResult === "roger over" || micResult === "not roger") {
         setAction("");
       } else {
         addItem(micResult);
@@ -323,7 +323,7 @@ function List() {
           ))}
         </ul>
       )}
-      <CustomBtn
+      <SaveBtn
         title="Add new item"
         className={`add-new-item ${action}`}
         onClick={() => {

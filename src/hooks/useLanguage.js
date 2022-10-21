@@ -7,7 +7,7 @@ const useLanguage = () => {
   function dispatchLanguage(data, lang = false) {
     let getLanguage = lang !== false ? lang : data;
     setLanguage(
-      i18SupportedLanguages.indexOf(getLanguage.split("-")[0]) !== -1
+      i18SupportedLanguages.hasOwnProperty(getLanguage.split("-")[0]) !== -1
         ? getLanguage
         : "en-US"
     );
@@ -18,7 +18,7 @@ const useLanguage = () => {
     dispatchLanguage(language);
   }, []);
 
-  return [language];
+  return [language, dispatchLanguage];
 };
 
 export default useLanguage;

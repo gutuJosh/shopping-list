@@ -23,7 +23,7 @@ const useMicrophone = (language, continuous) => {
     microphone.current.maxAlternatives = 1;
 
     microphone.current.addEventListener("result", (event) => {
-      console.log("Im  in result event!");
+      //console.log("Im  in result event!");
       const result = continuous
         ? event.results[event.results.length - 1][0].transcript
         : event.results[0][0].transcript;

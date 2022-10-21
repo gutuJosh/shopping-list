@@ -18,7 +18,7 @@ function ItemDetails(props) {
   }, [props.data]);
 
   return (
-    <div className="item-details flex wrap">
+    <div className="item-details flex">
       <label className="flex-item auto pad-x-10">
         <span className="inline-block">Items number:</span>
 
