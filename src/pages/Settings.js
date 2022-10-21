@@ -97,7 +97,9 @@ function Settings() {
         </li>
         <li>
           <div className="flex">
-            <span className="pad-x-10 flex-item auto">Microphone</span>
+            <span className="pad-x-10 flex-item auto">
+              Microphone permission
+            </span>
             <div className="switch-container">
               <SwitchBtn
                 id="mic-permission"

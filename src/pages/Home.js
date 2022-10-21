@@ -18,7 +18,7 @@ import useMicrophone from "../hooks/useMicrophone";
 import useLanguage from "../hooks/useLanguage";
 import { useTranslation } from "react-i18next";
 
-const InputField = React.lazy(() => import("../components/InputFiled"));
+const InputField = React.lazy(() => import("../components/InputField"));
 
 function Home() {
   let dbManager = dataBaseManager;

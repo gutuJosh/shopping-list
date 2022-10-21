@@ -21,7 +21,7 @@ import useMicrophone from "../hooks/useMicrophone";
 import useLongPress from "../hooks/useLongPress";
 import useLanguage from "../hooks/useLanguage";
 
-const InputField = React.lazy(() => import("../components/InputFiled"));
+const InputField = React.lazy(() => import("../components/InputField"));
 
 const calculateTotal = (items) => {
   const total = items.reduce((sum, value) => {

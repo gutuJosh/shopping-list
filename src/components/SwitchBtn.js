@@ -18,8 +18,8 @@ function SwitchBtn(props) {
         onChange={(e) => {
           e.stopPropagation();
           props.handlePermission();
-          if (e.target.checked) {
-            setInputValue(e.target.value);
+          if (!e.target.checked) {
+            alert("Microphone permission already given!");
           }
         }}
       />
