@@ -2,10 +2,16 @@ import { useState, useMemo, useEffect } from "react";
 import SwitchBtn from "../components/SwitchBtn";
 import i18Languages from "../config/i18SupportedLanguages";
 import useLanguage from "../hooks/useLanguage";
+import StorageManager from "../helpers/StorageManager";
 
 function Settings() {
   const [lang, dispatchLanguage] = useLanguage();
   const [micPermission, setMicPermission] = useState(false);
+  const [theme, setTheme] = useState(
+    StorageManager.getLocal("theme") !== false
+      ? StorageManager.getLocal("theme")
+      : "dark"
+  );
   const languages = useMemo(() => {
     let getIsoCodes = [];
     for (const key in i18Languages) {
@@ -118,9 +124,14 @@ function Settings() {
                 title="Open"
                 onClick={(e) => {
                   e.stopPropagation();
+                  setTheme("dark");
+                  StorageManager.removeLocalItem("theme");
+                  document.querySelector("body").classList.remove("light");
                 }}
               >
-                <use href="#moon-active-icon"></use>
+                <use
+                  href={theme === "dark" ? `#moon-active-icon` : `#moon-icon`}
+                ></use>
               </svg>
             </div>
             <div className="pad-x-10">
@@ -129,9 +140,14 @@ function Settings() {
                 title="Open"
                 onClick={(e) => {
                   e.stopPropagation();
+                  setTheme("light");
+                  StorageManager.setLocal("theme", "light");
+                  document.querySelector("body").classList.add("light");
                 }}
               >
-                <use href="#sun-icon"></use>
+                <use
+                  href={theme !== "dark" ? `#sun-active-icon` : `#sun-icon`}
+                ></use>
               </svg>
             </div>
           </div>

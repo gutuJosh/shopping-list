@@ -57,7 +57,6 @@ function List() {
 
   const addItem = (itemName) => {
     if (itemName === "") {
-      console.log("Item name is empty!");
       return;
     }
 
@@ -65,7 +64,7 @@ function List() {
       (item) => item.name.toLowerCase() === itemName.toLowerCase()
     );
     if (duplicateItem.length > 0) {
-      console.log("Item name already exists!");
+      alert("Item name already exists!");
       return;
     }
     const getMaxId = listItems.reduce((sum, item) => {

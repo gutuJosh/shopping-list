@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppContextProvider } from "./context/AppContextProvider";
 import Home from "./pages/Home";
@@ -12,6 +12,19 @@ function App() {
   const [currentComponent, setCurrentComponent] = useState("home");
 
   const handleMenu = (pageName) => setCurrentComponent(pageName);
+
+  useEffect(() => {
+    //handle theme mode
+    window.addEventListener(
+      "load",
+      () => {
+        if (localStorage["theme"]) {
+          document.querySelector("body").classList.add(localStorage["theme"]);
+        }
+      },
+      false
+    );
+  }, []);
 
   return (
     <BrowserRouter>

@@ -39,14 +39,13 @@ function Home() {
 
   const createList = (listName) => {
     if (listName === "") {
-      console.log("List name is empty!");
       return;
     }
     const duplicateItem = lists.filter(
       (item) => item.name.toLowerCase() === listName.toLowerCase()
     );
     if (duplicateItem.length > 0) {
-      console.log("List name allready exists!");
+      alert("List name allready exists!");
       return;
     }
     const getMaxId = lists.reduce((sum, item) => {
@@ -200,6 +199,10 @@ function Home() {
           <InputField
             placeholder={t("Insert list name")}
             handleInputValue={createList}
+            handleSaveBtn={() => {
+              setShowInput(false);
+              setAction("");
+            }}
           />
         </Suspense>
       )}
