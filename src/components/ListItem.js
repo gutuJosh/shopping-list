@@ -35,6 +35,10 @@ function ListItem(props) {
     }
     if (e.changedTouches === undefined) {
       e.preventDefault();
+    } else {
+      if (ev.targetTouches.length === 1) {
+        return false;
+      }
     }
     delay = setTimeout(() => draggItem(e), 350);
   };
