@@ -36,7 +36,7 @@ function ListItem(props) {
     if (e.changedTouches === undefined) {
       e.preventDefault();
     } else {
-      if (ev.targetTouches.length === 1) {
+      if (e.targetTouches.length === 1) {
         return false;
       }
     }
