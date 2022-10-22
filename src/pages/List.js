@@ -6,7 +6,7 @@ import React, {
   Suspense,
   useCallback,
 } from "react";
-import ItemDetails from "../components/ItemDetails";
+import ListItemDetails from "../components/ListItemDetails";
 import ListItem from "../components/ListItem";
 import CheckBox from "../components/CheckBox";
 import Filters from "../components/Filters";
@@ -325,7 +325,7 @@ function List() {
                   </svg>
                 </div>
               </div>
-              <ItemDetails data={item} update={updateItem} />
+              <ListItemDetails data={item} update={updateItem} />
             </ListItem>
           ))}
         </ul>

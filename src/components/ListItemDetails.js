@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function ItemDetails(props) {
+function ListItemDetails(props) {
   const [qty, setQty] = useState();
   const [price, setPrice] = useState();
 
@@ -64,4 +64,4 @@ function ItemDetails(props) {
   );
 }
 
-export default ItemDetails;
+export default ListItemDetails;
