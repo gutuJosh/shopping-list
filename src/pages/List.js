@@ -8,8 +8,8 @@ import React, {
 } from "react";
 import ListItemDetails from "../components/ListItemDetails";
 import ListItem from "../components/ListItem";
-import CheckBox from "../components/CheckBox";
-import Filters from "../components/Filters";
+import CustomCheckBox from "../components/CustomCheckBox";
+import FilterBtns from "../components/FilterBtns";
 import SaveBtn from "../components/SaveBtn";
 import handleDisplay from "../helpers/HandleDisplay";
 import { AppContext } from "../context/AppContextProvider";
@@ -287,7 +287,7 @@ function List() {
           <InputField placeholder="Add item" handleInputValue={addItem} />
         </Suspense>
       )}
-      <Filters name="list-items" handleClick={handleFilters} />
+      <FilterBtns name="list-items" handleClick={handleFilters} />
       {listItems !== false && (
         <ul className="shopping-list all-lists" ref={shoppingList}>
           {listItems.map((item, i) => (
@@ -298,7 +298,11 @@ function List() {
               key={`listitem_${i}`}
             >
               <div className="flex">
-                <CheckBox {...item} handleValue={updateItemStatus} index={i} />
+                <CustomCheckBox
+                  {...item}
+                  handleValue={updateItemStatus}
+                  index={i}
+                />
 
                 <div className="pad-x-10 txt-center">
                   <svg

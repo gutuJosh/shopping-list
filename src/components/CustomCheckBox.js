@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function CheckBox(props) {
+function CustomCheckBox(props) {
   const [btnState, setBtnState] = useState(false);
 
   useEffect(() => {
@@ -46,4 +46,4 @@ function CheckBox(props) {
   );
 }
 
-export default CheckBox;
+export default CustomCheckBox;

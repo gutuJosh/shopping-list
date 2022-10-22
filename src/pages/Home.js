@@ -9,7 +9,7 @@ import { AppContext } from "../context/AppContextProvider";
 import handleDisplay from "../helpers/HandleDisplay";
 import dataBaseManager from "../indexedDbManager";
 import SaveBtn from "../components/SaveBtn";
-import Filters from "../components/Filters";
+import FilterBtns from "../components/FilterBtns";
 import RadioButton from "../components/RadioButton";
 import ListItem from "../components/ListItem";
 import useLongPress from "../hooks/useLongPress";
@@ -203,7 +203,7 @@ function Home() {
           />
         </Suspense>
       )}
-      <Filters handleClick={handleFilters} />
+      <FilterBtns handleClick={handleFilters} />
       {lists !== false && (
         <ul className="shopping-list all-lists" ref={shoppingList}>
           {lists.map((item, i) => (

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Filters(props) {
+function FilterBtns(props) {
   const [active, setActive] = useState(0);
 
   const handleOnClick = (e) => {
@@ -40,4 +40,4 @@ function Filters(props) {
   );
 }
 
-export default Filters;
+export default FilterBtns;
