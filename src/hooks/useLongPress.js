@@ -30,10 +30,6 @@ export default function useLongPress(delay = 1000) {
     return fn();
   }
 
-  function handleMouseUp(fn) {
-    return fn();
-  }
-
   function handleOnMouseDown(fn) {
     isClick.current = false;
     startPressTimer(fn);
@@ -50,7 +46,6 @@ export default function useLongPress(delay = 1000) {
     handlers: {
       handleOnClick,
       handleOnMouseDown,
-      handleMouseUp,
       handleOnTouchStart,
     },
   };

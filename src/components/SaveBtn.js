@@ -26,7 +26,7 @@ function SaveBtn(props) {
 
   return (
     <footer>
-      <button {...props} ref={element} title={label}>
+      <button {...props} ref={element}>
         <span className="title-default">+ {props.title}</span>
         <span className="title-clicked">Save</span>
         <span className="title-audio-end">
@@ -35,7 +35,9 @@ function SaveBtn(props) {
           </svg>
         </span>
       </button>
-      <div className="btn-label">{label}</div>
+      <button className="shadow-btn" title={label}>
+        &nbsp;
+      </button>
     </footer>
   );
 }

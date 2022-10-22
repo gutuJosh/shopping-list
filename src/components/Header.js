@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import logo from "../logo.png";
 function Header(props) {
   let navigate = useNavigate();
   const location = useLocation();
@@ -31,7 +31,16 @@ function Header(props) {
                 </a>
               )}
             </li>
-            <li className="flex-item auto txt-center">Shopping list</li>
+            <li className="flex-item auto txt-center">
+              <img
+                src={logo}
+                width="48"
+                height="48"
+                alt="logo"
+                longdesc="shopping list"
+                className="logo"
+              />
+            </li>
             <li>
               <a
                 title="Settings"

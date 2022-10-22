@@ -15,7 +15,7 @@ import handleDisplay from "../helpers/HandleDisplay";
 import { AppContext } from "../context/AppContextProvider";
 import dataBaseManager from "../indexedDbManager";
 import { useNavigate } from "react-router-dom";
-//import useIsMounted from "../hooks/useIsMounted";
+import formatDate from "../helpers/FormatDate";
 import useDatabase from "../hooks/useDatabase";
 import useMicrophone from "../hooks/useMicrophone";
 import useLongPress from "../hooks/useLongPress";
@@ -274,7 +274,14 @@ function List() {
         {state.currentList.name}{" "}
         <span>({state.currentList.records}) items</span>
       </h1>
-      {listItems !== false && <p>Total cost: {totalPrice()}</p>}
+      {listItems !== false && (
+        <div className="flex mtop20">
+          <p className="flex-item">Total cost: {totalPrice()}</p>
+          <p className="flex-item txt-right">
+            Created at: {formatDate(state.currentList.date)}
+          </p>
+        </div>
+      )}
       {showInput === true && (
         <Suspense fallback={<div>Loading...</div>}>
           <InputField placeholder="Add item" handleInputValue={addItem} />
@@ -358,6 +365,7 @@ function List() {
           if (action === "click") {
             return;
           }
+
           handlers.handleOnTouchStart(handleSpeach);
         }}
       />

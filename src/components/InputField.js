@@ -11,6 +11,7 @@ function InputField(props) {
       <input
         type="text"
         autoFocus={true}
+        autoComplete="off"
         value={inputValue}
         placeholder={props.placeholder}
         onChange={(e) => setInputValue(e.target.value)}
