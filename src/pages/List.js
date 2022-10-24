@@ -20,6 +20,7 @@ import useDatabase from "../hooks/useDatabase";
 import useMicrophone from "../hooks/useMicrophone";
 import useLongPress from "../hooks/useLongPress";
 import useLanguage from "../hooks/useLanguage";
+import { useTranslation } from "react-i18next";
 
 const InputField = React.lazy(() => import("../components/InputField"));
 
@@ -48,7 +49,7 @@ function List() {
     itemStatus
   );
   const { action, setAction, handlers } = useLongPress(600);
-  //const mounted = useIsMounted();
+  const { t } = useTranslation();
   let navigate = useNavigate();
   const [language] = useLanguage();
   const [micResult, dispatchSpeach] = useMicrophone(language, true);
@@ -64,7 +65,7 @@ function List() {
       (item) => item.name.toLowerCase() === itemName.toLowerCase()
     );
     if (duplicateItem.length > 0) {
-      alert("Item name already exists!");
+      alert(t("Item name already exists!"));
       return;
     }
     const getMaxId = listItems.reduce((sum, item) => {
@@ -102,7 +103,7 @@ function List() {
 
   const removeItem = (e, name) => {
     if (name === "") {
-      console.log("Item name can'not be empty!");
+      alert(t("Item name can'not be empty!"));
       return;
     }
 
@@ -143,10 +144,10 @@ function List() {
           dispatchList(getItems);
           updateMetadata(state.currentList, getItems);
         } else {
-          console.log(resp);
+          alert(t(resp));
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => alert(err.message));
   };
 
   const getListStatus = () => {
@@ -271,20 +272,25 @@ function List() {
     <>
       <h1 className="pad-x-20">
         {state.currentList.name}{" "}
-        <span>({state.currentList.records}) items</span>
+        <span>
+          ({state.currentList.records}) {t("items")}
+        </span>
       </h1>
       {listItems !== false && (
         <div className="flex mtop20 pad-x-20">
-          <p className="flex-item">Total cost: {totalPrice()}</p>
+          <p className="flex-item">
+            {t("Total cost")}: {totalPrice()}
+          </p>
           <p className="flex-item txt-right">
-            Created at: {formatDate(state.currentList.date)}
+            {t("Created at")}: {formatDate(state.currentList.date)}
           </p>
         </div>
       )}
       {showInput === true && (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>{t("Loading")}...</div>}>
           <InputField
-            placeholder="Add item"
+            btnLabel={t("Save")}
+            placeholder={t("Add item")}
             handleInputValue={addItem}
             handleSaveBtn={() => {
               setShowInput(false);
@@ -293,7 +299,11 @@ function List() {
           />
         </Suspense>
       )}
-      <FilterBtns name="list-items" handleClick={handleFilters} />
+      <FilterBtns
+        name="list-items"
+        handleClick={handleFilters}
+        translator={t}
+      />
       {listItems !== false && (
         <ul className="shopping-list all-lists pad-x-20" ref={shoppingList}>
           {listItems.map((item, i) => (
@@ -313,7 +323,7 @@ function List() {
                 <div className="pad-x-10 txt-center">
                   <svg
                     className="icn"
-                    title="Dettails"
+                    title={t("Dettails")}
                     onClick={(e) => {
                       e.stopPropagation();
                       e.target.closest("li").classList.toggle("active");
@@ -335,12 +345,14 @@ function List() {
                   </svg>
                 </div>
               </div>
-              <ListItemDetails data={item} update={updateItem} />
+              <ListItemDetails data={item} update={updateItem} translator={t} />
             </ListItem>
           ))}
         </ul>
       )}
       <SaveBtn
+        btnlabel={t("Save")}
+        tip={t("Tap for a text note | Tap & hold for a voice note")}
         title="Add new item"
         className={`add-new-item ${action}`}
         onClick={() => {

@@ -60,7 +60,7 @@ function InputField(props) {
               saveNewItem();
             }}
           >
-            OK
+            {props.btnLabel}
           </button>
         </div>
       </div>

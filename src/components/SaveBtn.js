@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react";
 function SaveBtn(props) {
   const element = useRef(null);
   const [loaded, setLoaded] = useState(false);
-  const [label, setLabel] = useState(
-    "Tap for a text note | Tap & hold for a voice note"
-  );
+  const [label, setLabel] = useState(props.tip);
 
   const addAnimation = () => {
     element.current.classList.add("animated");
@@ -26,7 +24,7 @@ function SaveBtn(props) {
     <footer className="pad-x-20">
       <button {...props} ref={element}>
         <span className="title-default">+ {props.title}</span>
-        <span className="title-clicked">Save</span>
+        <span className="title-clicked">{props.btnlabel}</span>
         <span className="title-audio-end">
           <svg className="icn">
             <use href="#microphone-icon"></use>

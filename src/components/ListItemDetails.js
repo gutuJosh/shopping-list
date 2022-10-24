@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 function ListItemDetails(props) {
   const [qty, setQty] = useState();
   const [price, setPrice] = useState();
-
+  const t = props.translator;
   const formatValue = (data) => {
     let getValue = data.replace(/[a-zA-Z]/g, "").replace(/,/g, ".");
     if (isNaN(getValue)) {
@@ -20,7 +20,7 @@ function ListItemDetails(props) {
   return (
     <div className="item-details flex">
       <label className="flex-item auto pad-x-10">
-        <span className="inline-block">Items number:</span>
+        <span className="inline-block">{t("Items number")}:</span>
 
         <input
           type="text"
@@ -30,7 +30,7 @@ function ListItemDetails(props) {
         />
       </label>
       <label className="flex-item auto pad-x-10">
-        <span className="inline-block">Price per item:</span>
+        <span className="inline-block">{t("Price per item")}:</span>
 
         <input
           type="text"
@@ -57,7 +57,7 @@ function ListItemDetails(props) {
             );
           }}
         >
-          OK
+          {t("OK")}
         </button>
       </label>
     </div>

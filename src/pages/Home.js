@@ -45,7 +45,7 @@ function Home() {
       (item) => item.name.toLowerCase() === listName.toLowerCase()
     );
     if (duplicateItem.length > 0) {
-      alert("List name allready exists!");
+      alert(t("List name allready exists!"));
       return;
     }
     const getMaxId = lists.reduce((sum, item) => {
@@ -134,7 +134,7 @@ function Home() {
 
       let response = await dbManager.updateRow("metadata", item.name, newValue);
       if (response.status !== "ok") {
-        console.log(response.msg);
+        alert(t(response.msg));
       }
     });
 
@@ -195,8 +195,9 @@ function Home() {
       {appStatus && <h2>Loading ...</h2>}
       <h1 className="pad-x-20">{t("My Lists")}</h1>
       {showInput === true && (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>{t("Loading")}...</div>}>
           <InputField
+            btnLabel={t("Save")}
             placeholder={t("Insert list name")}
             handleInputValue={createList}
             handleSaveBtn={() => {
@@ -206,7 +207,7 @@ function Home() {
           />
         </Suspense>
       )}
-      <FilterBtns handleClick={handleFilters} />
+      <FilterBtns handleClick={handleFilters} translator={t} />
       {lists !== false && (
         <ul
           className="shopping-list all-lists main-list pad-x-20"
@@ -239,7 +240,9 @@ function Home() {
         </ul>
       )}
       <SaveBtn
-        title="Add new list"
+        btnlabel={t("Save")}
+        tip={t("Tap for a text note | Tap & hold for a voice note")}
+        title={t("Add new list")}
         className={`add-new-item ${action}`}
         onClick={() => {
           handlers.handleOnClick(() => {

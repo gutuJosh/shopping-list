@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 function SwitchBtn(props) {
   const [inputValue, setInputValue] = useState(false);
-
+  const t = props.translator;
   useEffect(() => {
     setInputValue(navigator.onLine ? props.permission : false);
   }, [props]);
@@ -19,7 +19,7 @@ function SwitchBtn(props) {
           e.stopPropagation();
           props.handlePermission();
           if (!e.target.checked) {
-            alert("Microphone permission already given!");
+            alert(t("Microphone permission already given!"));
           }
         }}
       />

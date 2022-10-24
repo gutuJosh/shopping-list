@@ -3,6 +3,7 @@ import SwitchBtn from "../components/SwitchBtn";
 import i18Languages from "../config/i18SupportedLanguages";
 import useLanguage from "../hooks/useLanguage";
 import StorageManager from "../helpers/StorageManager";
+import { useTranslation } from "react-i18next";
 
 function Settings() {
   const [lang, dispatchLanguage] = useLanguage();
@@ -12,6 +13,7 @@ function Settings() {
       ? StorageManager.getLocal("theme")
       : "dark"
   );
+  const { t } = useTranslation();
   const languages = useMemo(() => {
     let getIsoCodes = [];
     for (const key in i18Languages) {
@@ -54,10 +56,11 @@ function Settings() {
 
   return (
     <>
-      <h1 className="pad-x-20">Settings</h1>
+      <h1 className="pad-x-20">{t("Settings")}</h1>
       <p className="mtop20 pad-x-20">
-        Application management, set language, microphone permission and theme
-        mode.
+        {t(
+          "Application management, set language, microphone permission and theme mode."
+        )}
       </p>
       <ul className="shopping-list setting-list pad-x-20">
         <li>
@@ -68,7 +71,7 @@ function Settings() {
               e.target.closest("li").classList.toggle("active");
             }}
           >
-            <span className="pad-x-10">Language</span>
+            <span className="pad-x-10">{t("Language")}</span>
             <div className="flex-item auto txt-right">
               <svg className="icn" title="Open">
                 <use href="#arrow-down-icon"></use>
@@ -93,7 +96,7 @@ function Settings() {
                         }
                       }}
                     />
-                    <span className="txt">{i18Languages[item]}</span>
+                    <span className="txt">{t(i18Languages[item])}</span>
                     <span className="checkmark"></span>
                   </label>
                 </div>
@@ -104,10 +107,11 @@ function Settings() {
         <li>
           <div className="flex">
             <span className="pad-x-10 flex-item auto">
-              Microphone permission
+              {t("Microphone permission")}
             </span>
             <div className="switch-container">
               <SwitchBtn
+                translator={t}
                 id="mic-permission"
                 permission={micPermission}
                 handlePermission={askForMicPermission}
@@ -117,7 +121,7 @@ function Settings() {
         </li>
         <li>
           <div className="flex">
-            <span className="flex-item auto pad-x-10">Theme</span>
+            <span className="flex-item auto pad-x-10"> {t("Theme")}</span>
             <div className="pad-x-10">
               <svg
                 className="icn"

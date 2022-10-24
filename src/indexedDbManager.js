@@ -160,7 +160,7 @@ class indexedDbManager {
       request.onerror = (event) => {
         reject({
           status: "ko",
-          msg: "Why didn't you allow my web app to use IndexedDB?!",
+          msg: "Can't open the database!",
         });
       };
 
@@ -429,11 +429,11 @@ class indexedDbManager {
     return new Promise((resolve, reject) => {
       const DBDeleteRequest = indexedDB.deleteDatabase(dbName);
 
-      DBDeleteRequest.onerror = function(event) {
+      DBDeleteRequest.onerror = function (event) {
         reject("Error deleting database.");
       };
 
-      DBDeleteRequest.onsuccess = function(event) {
+      DBDeleteRequest.onsuccess = function (event) {
         // should be undefined
         if (event.result === undefined) {
           resolve("Database deleted successfully");

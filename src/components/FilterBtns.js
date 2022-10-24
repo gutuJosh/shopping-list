@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 function FilterBtns(props) {
   const [active, setActive] = useState(0);
+  const t = props.translator;
 
   const handleOnClick = (e) => {
     e.preventDefault();
@@ -18,7 +19,7 @@ function FilterBtns(props) {
         disabled={active === 0 ? true : false}
         className="pad-x-10"
       >
-        All
+        {t("All")}
       </button>
       <button
         onClick={handleOnClick}
@@ -26,7 +27,7 @@ function FilterBtns(props) {
         disabled={active === 1 ? true : false}
         className="pad-x-10 inline-block"
       >
-        Completed
+        {t("Completed")}
       </button>
       <button
         onClick={handleOnClick}
@@ -34,7 +35,7 @@ function FilterBtns(props) {
         disabled={active === 2 ? true : false}
         className="pad-x-10"
       >
-        Uncompleted
+        {t("Uncompleted")}
       </button>
     </nav>
   );
