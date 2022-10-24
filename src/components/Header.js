@@ -11,7 +11,7 @@ function Header(props) {
 
   return (
     <>
-      <header className="menu-container">
+      <header className="menu-container pad-x-20">
         <nav className="main-nav">
           <ul className="flex">
             <li>

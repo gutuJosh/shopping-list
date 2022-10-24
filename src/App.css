@@ -362,7 +362,7 @@ h1 {
 
 .page {
   position: absolute;
-  width: calc(100% - 40px);
+  width: 100%;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -441,21 +441,24 @@ ul {
   position: relative;
 }
 .shopping-list {
-  height: calc(100vh - 260px);
+  height: calc(100vh - 340px);
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 20px;
   scrollbar-width: thin;
-  padding-bottom: 100px;
+  padding-bottom: 60px;
+}
+.shopping-list.main-list {
+  height: calc(100vh - 300px);
 }
 .shopping-list::-webkit-scrollbar {
   width: 5px;
 }
 .shopping-list::-webkit-scrollbar-track {
-  background-color: var(--light-grey);
+  background-color: var(--dark-grey);
 }
 .shopping-list::-webkit-scrollbar-thumb {
-  background-color: var(--yellow);
+  background-color: var(--light-grey);
 }
 ul:not(.draggable) li {
   position: relative;
@@ -534,23 +537,20 @@ ul.draggable li.move-up {
   display: inline-block;
   cursor: pointer;
 }
-.icnx2 {
-  width: 32px;
-  height: 32px;
-}
-.close-icn {
-  margin: 0 -10px 0 10px;
+
+.close-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 footer {
   width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  position: relative;
+  height: 100px;
   z-index: 10;
   background-color: var(--dark-grey);
 }
-.add-new-item,
-.shadow-btn {
+.add-new-item {
   border: none;
   text-align: center;
   background-color: var(--yellow);
@@ -570,13 +570,7 @@ footer {
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
   z-index: 10;
 }
-.shadow-btn {
-  color: transparent;
-  background: transparent;
-  opacity: 0;
-  position: absolute;
-  z-index: 1;
-}
+
 .add-new-item span {
   line-height: 80px;
   position: absolute;
@@ -617,30 +611,19 @@ footer {
   display: none;
 }
 
-.shadow-btn::before {
+.tips {
   content: attr(title);
   font-size: 1.2rem;
-  display: block;
   width: calc(100% - 40px);
   text-align: center;
-  color: var(--dark-grey);
-  line-height: 40px;
-  background-color: #fff;
-  border-radius: 6px 6px 0 0;
+  color: #fff;
   position: absolute;
-  top: 10px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.4s ease-in-out;
-  z-index: 0;
 }
-.add-new-item.click ~ .shadow-btn {
-  opacity: 1;
-}
-.add-new-item.click ~ .shadow-btn::before {
-  top: -40px;
-}
-.add-new-item.longpress ~ .shadow-btn {
+
+.add-new-item.longpress ~ .tips {
   display: none;
 }
 /*Custom checkbox/radio buttons*/
@@ -715,10 +698,14 @@ footer {
   transform: translateX(-50%);
   background-color: var(--yellow);
   transition: all 0.3s ease-out;
-  z-index: 1;
+  z-index: 100;
 }
 .new-item-container.active {
-  top: 85px;
+  top: 0px;
+}
+.new-item-container > div {
+  max-height: 50px;
+  margin: 20px 0;
 }
 .new-item-container input {
   width: 100%;
@@ -726,6 +713,18 @@ footer {
   border-radius: 10px;
   background-color: var(--dark-grey);
   color: #fff;
+}
+
+.new-item-container button {
+  background-color: var(--dark-grey);
+  color: var(--yellow);
+  height: auto;
+  border-radius: 10px;
+  border: none;
+  padding: 0 20px;
+  position: relative;
+  top: -9px;
+  line-height: 48px;
 }
 
 .setting-list .item-details label {
@@ -818,6 +817,12 @@ body.light .filters-container button:disabled {
   border: 1px solid var(--font-grey);
   color: var(--font-grey);
 }
+body.light .shopping-list {
+  height: calc(100vh - 360px);
+}
+body.light .shopping-list.main-list {
+  height: calc(100vh - 320px);
+}
 body.light .shopping-list li {
   background-color: #fff;
   border: 1px solid var(--font-grey);
@@ -854,6 +859,27 @@ body.light .new-item-container {
 }
 body.light .new-item-container input {
   background-color: #fff;
+  color: var(--font-grey);
+}
+
+body.light li.dragg-active {
+  background-image: -webkit-repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 3px,
+    #f1f1f1 3px,
+    #f1f1f1 6px
+  );
+  background-image: -moz-repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 3px,
+    #f1f1f1 3px,
+    #f1f1f1 6px
+  );
+}
+
+body.light footer .tips {
   color: var(--font-grey);
 }
 

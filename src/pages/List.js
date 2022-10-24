@@ -269,12 +269,12 @@ function List() {
 
   return (
     <>
-      <h1>
+      <h1 className="pad-x-20">
         {state.currentList.name}{" "}
         <span>({state.currentList.records}) items</span>
       </h1>
       {listItems !== false && (
-        <div className="flex mtop20">
+        <div className="flex mtop20 pad-x-20">
           <p className="flex-item">Total cost: {totalPrice()}</p>
           <p className="flex-item txt-right">
             Created at: {formatDate(state.currentList.date)}
@@ -283,12 +283,19 @@ function List() {
       )}
       {showInput === true && (
         <Suspense fallback={<div>Loading...</div>}>
-          <InputField placeholder="Add item" handleInputValue={addItem} />
+          <InputField
+            placeholder="Add item"
+            handleInputValue={addItem}
+            handleSaveBtn={() => {
+              setShowInput(false);
+              setAction("");
+            }}
+          />
         </Suspense>
       )}
       <FilterBtns name="list-items" handleClick={handleFilters} />
       {listItems !== false && (
-        <ul className="shopping-list all-lists" ref={shoppingList}>
+        <ul className="shopping-list all-lists pad-x-20" ref={shoppingList}>
           {listItems.map((item, i) => (
             <ListItem
               index={i}

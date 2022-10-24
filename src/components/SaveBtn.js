@@ -17,15 +17,13 @@ function SaveBtn(props) {
     if (!loaded) {
       element.current.addEventListener("transitionend", addAnimation);
     }
-    setLabel(
-      navigator.onLine
-        ? `Tap for a text note | Tap & hold for a voice note`
-        : `Tap for a text note`
-    );
+    if (!navigator.onLine) {
+      setLabel(false);
+    }
   }, []);
 
   return (
-    <footer>
+    <footer className="pad-x-20">
       <button {...props} ref={element}>
         <span className="title-default">+ {props.title}</span>
         <span className="title-clicked">Save</span>
@@ -35,9 +33,7 @@ function SaveBtn(props) {
           </svg>
         </span>
       </button>
-      <button className="shadow-btn" title={label}>
-        &nbsp;
-      </button>
+      {label && <small className="tips">{label}</small>}
     </footer>
   );
 }

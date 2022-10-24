@@ -193,7 +193,7 @@ function Home() {
   return (
     <>
       {appStatus && <h2>Loading ...</h2>}
-      <h1>{t("My Lists")}</h1>
+      <h1 className="pad-x-20">{t("My Lists")}</h1>
       {showInput === true && (
         <Suspense fallback={<div>Loading...</div>}>
           <InputField
@@ -208,7 +208,10 @@ function Home() {
       )}
       <FilterBtns handleClick={handleFilters} />
       {lists !== false && (
-        <ul className="shopping-list all-lists" ref={shoppingList}>
+        <ul
+          className="shopping-list all-lists main-list pad-x-20"
+          ref={shoppingList}
+        >
           {lists.map((item, i) => (
             <ListItem
               index={i}

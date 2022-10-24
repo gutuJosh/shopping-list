@@ -54,12 +54,12 @@ function Settings() {
 
   return (
     <>
-      <h1>Settings</h1>
-      <p className="mtop20">
+      <h1 className="pad-x-20">Settings</h1>
+      <p className="mtop20 pad-x-20">
         Application management, set language, microphone permission and theme
         mode.
       </p>
-      <ul className="shopping-list setting-list">
+      <ul className="shopping-list setting-list pad-x-20">
         <li>
           <div
             className="flex"

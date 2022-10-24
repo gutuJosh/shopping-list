@@ -11,7 +11,7 @@ function FilterBtns(props) {
   };
 
   return (
-    <nav className="filters-container mtop20">
+    <nav className="filters-container mtop20 pad-x-20">
       <button
         onClick={handleOnClick}
         data-key="0"
