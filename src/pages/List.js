@@ -3,10 +3,10 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  Suspense,
   useCallback,
 } from "react";
 import ListItemDetails from "../components/ListItemDetails";
+import InputField from "../components/InputField";
 import ListItem from "../components/ListItem";
 import CustomCheckBox from "../components/CustomCheckBox";
 import FilterBtns from "../components/FilterBtns";
@@ -21,8 +21,6 @@ import useMicrophone from "../hooks/useMicrophone";
 import useLongPress from "../hooks/useLongPress";
 import useLanguage from "../hooks/useLanguage";
 import { useTranslation } from "react-i18next";
-
-const InputField = React.lazy(() => import("../components/InputField"));
 
 const calculateTotal = (items) => {
   const total = items.reduce((sum, value) => {
@@ -42,6 +40,7 @@ function List() {
   const [state, dispatch] = useContext(AppContext);
   const [showInput, setShowInput] = useState(false);
   const [itemStatus, setItemStatus] = useState(0);
+  const [newItemValue, setNewItemValue] = useState(false);
   const shoppingList = useRef(null);
   const [listItems, dispatchList] = useDatabase(
     state.currentList.name,
@@ -87,7 +86,6 @@ function List() {
       .insertData(state.currentList.name, itemToAdd)
       .then((resp) => {
         if (resp.status === "ok") {
-          console.log(resp);
           const items = [...listItems];
           items.push(itemToAdd);
           setListItems(items);
@@ -98,7 +96,9 @@ function List() {
           );
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        /*console.log(err)*/
+      });
   };
 
   const removeItem = (e, name) => {
@@ -125,7 +125,9 @@ function List() {
             updateMetadata(state.currentList, items);
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          /*console.log(err)*/
+        });
     });
   };
 
@@ -180,7 +182,7 @@ function List() {
         },
       });
     } else {
-      console.log(response.msg);
+      alert(response.msg);
     }
   };
 
@@ -233,7 +235,7 @@ function List() {
         newValue
       );
       if (response.status !== "ok") {
-        console.log(response.msg);
+        alert(response.msg);
       }
     });
 
@@ -287,17 +289,16 @@ function List() {
         </div>
       )}
       {showInput === true && (
-        <Suspense fallback={<div>{t("Loading")}...</div>}>
-          <InputField
-            btnLabel={t("Save")}
-            placeholder={t("Add item")}
-            handleInputValue={addItem}
-            handleSaveBtn={() => {
-              setShowInput(false);
-              setAction("");
-            }}
-          />
-        </Suspense>
+        <InputField
+          btnLabel={t("Save")}
+          placeholder={t("Add item")}
+          handleInputValue={addItem}
+          handleSaveBtn={() => {
+            setShowInput(false);
+            setAction("");
+          }}
+          captureValue={setNewItemValue}
+        />
       )}
       <FilterBtns
         name="list-items"
@@ -353,7 +354,7 @@ function List() {
       <SaveBtn
         btnlabel={t("Save")}
         tip={t("Tap for a text note | Tap & hold for a voice note")}
-        title="Add new item"
+        title={t("Add new item")}
         className={`add-new-item ${action}`}
         onClick={() => {
           handlers.handleOnClick(() => {
@@ -362,6 +363,10 @@ function List() {
             } else {
               setShowInput(false);
               setAction("");
+              if (newItemValue) {
+                addItem(newItemValue);
+                setNewItemValue(false);
+              }
             }
           });
         }}

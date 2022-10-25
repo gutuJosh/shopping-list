@@ -1,13 +1,8 @@
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  useRef,
-  Suspense,
-} from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { AppContext } from "../context/AppContextProvider";
 import handleDisplay from "../helpers/HandleDisplay";
 import dataBaseManager from "../indexedDbManager";
+import InputField from "../components/InputField";
 import SaveBtn from "../components/SaveBtn";
 import FilterBtns from "../components/FilterBtns";
 import RadioButton from "../components/RadioButton";
@@ -18,13 +13,12 @@ import useMicrophone from "../hooks/useMicrophone";
 import useLanguage from "../hooks/useLanguage";
 import { useTranslation } from "react-i18next";
 
-const InputField = React.lazy(() => import("../components/InputField"));
-
 function Home() {
   let dbManager = dataBaseManager;
   const [state, dispatch] = useContext(AppContext);
   const [appStatus, setAppStatus] = useState(false);
   const [showInput, setShowInput] = useState(false);
+  const [newItemValue, setNewItemValue] = useState(false);
   const [filter, setFilter] = useState(0);
   const shoppingList = useRef(null);
   const [lists, setList] = useDatabase(
@@ -76,9 +70,11 @@ function Home() {
         return dbManager.insertData("metadata", newItem);
       })
       .then((resp) => {
-        console.log(resp);
+        //console.log(resp);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        /*console.log(err)*/
+      });
   };
 
   const deleteList = (e, name) => {
@@ -102,12 +98,18 @@ function Home() {
             if (getLists.length > 0) {
               dbManager
                 .removeRow("metadata", name)
-                .then((resp) => console.log(resp))
-                .catch((err) => console.log(err));
+                .then((resp) => {
+                  /*console.log(resp)*/
+                })
+                .catch((err) => {
+                  /*console.log(err)*/
+                });
             }
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          /*console.log(err)*/
+        });
     });
   };
 
@@ -195,17 +197,16 @@ function Home() {
       {appStatus && <h2>Loading ...</h2>}
       <h1 className="pad-x-20">{t("My Lists")}</h1>
       {showInput === true && (
-        <Suspense fallback={<div>{t("Loading")}...</div>}>
-          <InputField
-            btnLabel={t("Save")}
-            placeholder={t("Insert list name")}
-            handleInputValue={createList}
-            handleSaveBtn={() => {
-              setShowInput(false);
-              setAction("");
-            }}
-          />
-        </Suspense>
+        <InputField
+          btnLabel={t("Save")}
+          placeholder={t("Insert list name")}
+          handleInputValue={createList}
+          handleSaveBtn={(value = false) => {
+            setShowInput(false);
+            setAction("");
+          }}
+          captureValue={setNewItemValue}
+        />
       )}
       <FilterBtns handleClick={handleFilters} translator={t} />
       {lists !== false && (
@@ -251,6 +252,10 @@ function Home() {
             } else {
               setShowInput(false);
               setAction("");
+              if (newItemValue) {
+                createList(newItemValue);
+                setNewItemValue(false);
+              }
             }
           });
         }}

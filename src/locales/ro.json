@@ -11,6 +11,7 @@
   "items": "produse",
   "Created at": "Data creației",
   "Add item": "Adaugă produs",
+  "Add new item": "Adaugă un nou produs",
   "Dettails": "Detalii",
   "Settings": "Setări",
   "Application management, set language, microphone permission and theme mode.": "Gestionază aplicația, setază limba, microfonul și tema aplicației.",
@@ -30,6 +31,7 @@
   "Price per item": "Preț produs",
   "Items number": "Numărul de produse",
   "OK": "OK",
-  "Tap for a text note | Tap & hold for a voice note": "Apasă pentru a introduce text | Apasă lung pentru comanada vocala",
-  "Microphone permission already given!": "Permisiunea pentru microfon a fost deja acordată!"
+  "Tap for a text note | Tap & hold for a voice note": "Apasă pentru a introduce text | Apasă lung pentru comanada vocală",
+  "Microphone permission already given!": "Permisiunea pentru microfon a fost deja acordată!",
+  "You are offline! Using Speech Recognition involves a server-based recognition engine.": "Esti deconectat de la rețea! Utilizarea microfonului implică un motor de recunoaștere vocală bazat pe server."
 }

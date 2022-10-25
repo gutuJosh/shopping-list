@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="theme-color" content="#19191a" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Grocery shopping list items editor. Save your list of items to purchase on your next visit to the grocery store."
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo-192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -107,5 +108,24 @@
         />
       </symbol>
     </svg>
+    <script>
+      if (navigator.serviceWorker) {
+        //Uninnstall service worker
+        /*navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+              //registration.unregister()
+            } 
+          });*/
+
+        navigator.serviceWorker
+          .register("%PUBLIC_URL%/service-worker.js")
+          .then(function (sw) {
+            console.log("Service worker registred successfully!");
+          })
+          .catch(function () {
+            console.error("Failure! Service worker was not registred!");
+          });
+      }
+    </script>
   </body>
 </html>

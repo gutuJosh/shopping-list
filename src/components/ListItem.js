@@ -10,7 +10,6 @@ function ListItem(props) {
   const element = useRef(null);
   const [data, setData] = useState(false);
   const [styles, setStyles] = useState({});
-
   const removeClass = (name) => {
     const element = document.querySelectorAll(`.${name}`);
     if (element.length > 0) {

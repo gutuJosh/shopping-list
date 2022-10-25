@@ -18,6 +18,13 @@ function SwitchBtn(props) {
         onChange={(e) => {
           e.stopPropagation();
           props.handlePermission();
+          if (!navigator.onLine) {
+            alert(
+              t(
+                "You are offline! Using Speech Recognition involves a server-based recognition engine."
+              )
+            );
+          }
           if (!e.target.checked) {
             alert(t("Microphone permission already given!"));
           }

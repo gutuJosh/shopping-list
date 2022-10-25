@@ -24,7 +24,9 @@ function InputField(props) {
             e.preventDefault();
             clearTimeout(delay);
             setInputValue("");
-            props.handleSaveBtn();
+            props.captureValue(false);
+            element.current.classList.remove("active");
+            setTimeout(() => props.handleSaveBtn(), 300);
           }}
         >
           <svg className="icn">
@@ -39,15 +41,13 @@ function InputField(props) {
             autoComplete="off"
             value={inputValue}
             placeholder={props.placeholder}
-            onChange={(e) => setInputValue(e.target.value)}
-            onBlur={(e) => {
-              delay = setTimeout(() => {
-                props.handleInputValue(inputValue);
-                setInputValue("");
-              }, 300);
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              props.captureValue(e.target.value);
             }}
             onKeyPress={(e) => {
               if (e.key === "Enter") {
+                props.captureValue(false);
                 saveNewItem();
               }
             }}
@@ -57,6 +57,7 @@ function InputField(props) {
           <button
             onClick={(e) => {
               e.preventDefault();
+              props.captureValue(false);
               saveNewItem();
             }}
           >
