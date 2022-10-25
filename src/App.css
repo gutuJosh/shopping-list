@@ -576,6 +576,7 @@ footer {
 }
 
 .add-new-item span {
+  width: 100%;
   line-height: 80px;
   position: absolute;
   top: 50%;
