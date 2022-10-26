@@ -30,7 +30,10 @@ function InputField(props) {
             setInputValue("");
             props.captureValue(false);
             element.current.classList.remove("active");
-            setTimeout(() => props.handleSaveBtn(), 300);
+            setTimeout(() => {
+              props.handleSaveBtn();
+              props.resetUlHeight({});
+            }, 300);
           }}
         >
           <svg className="icn">

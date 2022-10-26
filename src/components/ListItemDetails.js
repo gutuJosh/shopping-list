@@ -52,6 +52,7 @@ function ListItemDetails(props) {
               status: props.data.status,
             });
             setTimeout(() => {
+              props.resetUlHeight({});
               e.target.parentNode.closest("li").classList.remove("active");
             }, 300);
           }}

@@ -41,6 +41,7 @@ function List() {
   const [showInput, setShowInput] = useState(false);
   const [itemStatus, setItemStatus] = useState(0);
   const [newItemValue, setNewItemValue] = useState(false);
+  const [ulHeight, setUlHeight] = useState({});
   const shoppingList = useRef(null);
   const [listItems, dispatchList] = useDatabase(
     state.currentList.name,
@@ -123,6 +124,10 @@ function List() {
             const items = listItems.filter((item) => item.name !== name);
             setListItems(items);
             updateMetadata(state.currentList, items);
+            shoppingList.current.scrollTo(
+              0,
+              shoppingList.current.scrollHeight - 100
+            );
           }
         })
         .catch((err) => {
@@ -298,6 +303,7 @@ function List() {
             setAction("");
           }}
           captureValue={setNewItemValue}
+          resetUlHeight={setUlHeight}
         />
       )}
       <FilterBtns
@@ -306,7 +312,11 @@ function List() {
         translator={t}
       />
       {listItems !== false && (
-        <ul className="shopping-list all-lists pad-x-20" ref={shoppingList}>
+        <ul
+          className="shopping-list all-lists pad-x-20"
+          ref={shoppingList}
+          style={ulHeight}
+        >
           {listItems.map((item, i) => (
             <ListItem
               index={i}
@@ -327,6 +337,9 @@ function List() {
                     title={t("Dettails")}
                     onClick={(e) => {
                       e.stopPropagation();
+                      setUlHeight({
+                        height: shoppingList.current.offsetHeight + "px",
+                      });
                       e.target.closest("li").classList.toggle("active");
                     }}
                   >
@@ -346,7 +359,12 @@ function List() {
                   </svg>
                 </div>
               </div>
-              <ListItemDetails data={item} update={updateItem} translator={t} />
+              <ListItemDetails
+                data={item}
+                update={updateItem}
+                translator={t}
+                resetUlHeight={setUlHeight}
+              />
             </ListItem>
           ))}
         </ul>
@@ -358,12 +376,17 @@ function List() {
         className={`add-new-item ${action}`}
         onClick={() => {
           handlers.handleOnClick(() => {
-            const ul = document.querySelector(".shopping-list");
             if (!showInput) {
-              ul.style.height = ul.offsetHeight + "px";
+              setUlHeight({
+                height: shoppingList.current.offsetHeight + "px",
+              });
+              shoppingList.current.scrollTo(
+                0,
+                shoppingList.current.scrollHeight
+              );
               setShowInput(true);
             } else {
-              ul.removeAttribute("style");
+              setUlHeight({});
               setShowInput(false);
               setAction("");
               if (newItemValue) {

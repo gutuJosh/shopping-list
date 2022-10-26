@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-//custom hook outside the component to detect unmount
+//custom hook to load data from db
 const useDatabase = (list, dataBaseManager, filter) => {
   const [listItems, setListItems] = useState(false);
 
@@ -39,7 +39,7 @@ const useDatabase = (list, dataBaseManager, filter) => {
             dispatchList([]);
           }
         } catch (e) {
-          console.log(e.message);
+          //console.log(e.message);
           dispatchList([]);
         }
       });

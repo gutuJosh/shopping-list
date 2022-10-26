@@ -1,4 +1,4 @@
-const version = "V1.0.3";
+const version = "V1.0.5";
 const offlineCacheName = "offline" + version;
 
 const cacheList = [offlineCacheName];
