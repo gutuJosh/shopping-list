@@ -41,7 +41,6 @@ function List() {
   const [showInput, setShowInput] = useState(false);
   const [itemStatus, setItemStatus] = useState(0);
   const [newItemValue, setNewItemValue] = useState(false);
-  const [ulHeight, setUlHeight] = useState({});
   const shoppingList = useRef(null);
   const [listItems, dispatchList] = useDatabase(
     state.currentList.name,
@@ -91,10 +90,14 @@ function List() {
           items.push(itemToAdd);
           setListItems(items);
           updateMetadata(state.currentList, items);
-          shoppingList.current.scrollTo(
-            0,
-            shoppingList.current.scrollHeight + 100
-          );
+          try {
+            shoppingList.current.lastChild.scrollIntoView({
+              block: "start",
+              behavior: "smooth",
+            });
+          } catch (e) {
+            /*console.log(e.message)*/
+          }
         }
       })
       .catch((err) => {
@@ -124,10 +127,14 @@ function List() {
             const items = listItems.filter((item) => item.name !== name);
             setListItems(items);
             updateMetadata(state.currentList, items);
-            shoppingList.current.scrollTo(
-              0,
-              shoppingList.current.scrollHeight - 100
-            );
+            try {
+              shoppingList.current.lastChild.scrollIntoView({
+                block: "end",
+                behavior: "smooth",
+              });
+            } catch (e) {
+              /*console.log(e.message)*/
+            }
           }
         })
         .catch((err) => {
@@ -303,7 +310,6 @@ function List() {
             setAction("");
           }}
           captureValue={setNewItemValue}
-          resetUlHeight={setUlHeight}
         />
       )}
       <FilterBtns
@@ -312,11 +318,7 @@ function List() {
         translator={t}
       />
       {listItems !== false && (
-        <ul
-          className="shopping-list all-lists pad-x-20"
-          ref={shoppingList}
-          style={ulHeight}
-        >
+        <ul className="shopping-list all-lists pad-x-20" ref={shoppingList}>
           {listItems.map((item, i) => (
             <ListItem
               index={i}
@@ -337,10 +339,15 @@ function List() {
                     title={t("Dettails")}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setUlHeight({
-                        height: shoppingList.current.offsetHeight + "px",
-                      });
                       e.target.closest("li").classList.toggle("active");
+                      try {
+                        e.target.closest("li").scrollIntoView({
+                          block: "start",
+                          behavior: "smooth",
+                        });
+                      } catch (e) {
+                        /*console.log(e.message)*/
+                      }
                     }}
                   >
                     <use href="#elipsis-icon"></use>
@@ -359,12 +366,7 @@ function List() {
                   </svg>
                 </div>
               </div>
-              <ListItemDetails
-                data={item}
-                update={updateItem}
-                translator={t}
-                resetUlHeight={setUlHeight}
-              />
+              <ListItemDetails data={item} update={updateItem} translator={t} />
             </ListItem>
           ))}
         </ul>
@@ -374,23 +376,11 @@ function List() {
         tip={t("Tap & hold for a voice note")}
         title={t("Add new item")}
         className={`add-new-item ${action}`}
-        onClick={(e) => {
+        onClick={() => {
           handlers.handleOnClick(() => {
             if (!showInput) {
-              setUlHeight({
-                height: shoppingList.current.offsetHeight + "px",
-              });
-              shoppingList.current.scrollTo(
-                0,
-                shoppingList.current.scrollHeight
-              );
               setShowInput(true);
-              setTimeout(
-                () => window.scrollTo(0, e.target.closest("button").offsetTop),
-                300
-              );
             } else {
-              setUlHeight({});
               setShowInput(false);
               setAction("");
               if (newItemValue) {

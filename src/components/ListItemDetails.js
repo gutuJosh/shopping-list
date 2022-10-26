@@ -35,7 +35,7 @@ function ListItemDetails(props) {
         <input
           type="text"
           value={price}
-          placeholder="x 1"
+          placeholder={`x 1 ${t("item")}`}
           onChange={(e) => setPrice(formatValue(e.target.value))}
           onClick={(e) => e.stopPropagation()}
         />

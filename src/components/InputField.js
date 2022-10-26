@@ -32,7 +32,6 @@ function InputField(props) {
             element.current.classList.remove("active");
             setTimeout(() => {
               props.handleSaveBtn();
-              props.resetUlHeight({});
             }, 300);
           }}
         >
