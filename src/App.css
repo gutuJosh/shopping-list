@@ -431,6 +431,8 @@ h1 {
 .item-details label span {
   position: absolute;
   top: -35px;
+}
+.shopping-list:not(.setting-list) .item-details label span {
   min-width: 100px;
 }
 .item-details input {
