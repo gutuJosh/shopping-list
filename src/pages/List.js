@@ -337,6 +337,7 @@ function List() {
                     title={t("Dettails")}
                     onClick={(e) => {
                       e.stopPropagation();
+                      window.scrollTo(0, e.target.closest("button").offsetTop);
                       setUlHeight({
                         height: shoppingList.current.offsetHeight + "px",
                       });

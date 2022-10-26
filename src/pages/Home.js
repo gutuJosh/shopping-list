@@ -252,12 +252,13 @@ function Home() {
         tip={t("Tap & hold for a voice note")}
         title={t("Add new list")}
         className={`add-new-item ${action}`}
-        onClick={() => {
+        onClick={(e) => {
           handlers.handleOnClick(() => {
             if (!showInput) {
               setUlHeight({
                 height: shoppingList.current.offsetHeight + "px",
               });
+              window.scrollTo(0, e.target.closest("button").offsetTop);
               shoppingList.current.scrollTo(
                 0,
                 shoppingList.current.scrollHeight
