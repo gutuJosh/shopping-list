@@ -258,12 +258,15 @@ function Home() {
               setUlHeight({
                 height: shoppingList.current.offsetHeight + "px",
               });
-              window.scrollTo(0, e.target.closest("button").offsetTop);
               shoppingList.current.scrollTo(
                 0,
                 shoppingList.current.scrollHeight
               );
               setShowInput(true);
+              setTimeout(
+                () => window.scrollTo(0, e.target.closest("button").offsetTop),
+                300
+              );
             } else {
               setUlHeight({});
               setShowInput(false);
