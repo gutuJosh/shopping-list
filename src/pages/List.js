@@ -374,7 +374,7 @@ function List() {
         tip={t("Tap & hold for a voice note")}
         title={t("Add new item")}
         className={`add-new-item ${action}`}
-        onClick={() => {
+        onClick={(e) => {
           handlers.handleOnClick(() => {
             if (!showInput) {
               setUlHeight({
