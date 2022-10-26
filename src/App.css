@@ -443,8 +443,6 @@ h1 {
   border-radius: 10px;
 }
 ul {
-  margin: 0;
-  padding: 0;
   position: relative;
 }
 .shopping-list {
@@ -459,6 +457,9 @@ ul {
 .shopping-list.main-list {
   height: calc(100vh - 300px);
   min-height: 140px;
+}
+.shopping-list.setting-list {
+  height: calc(100vh - 120px);
 }
 .shopping-list::-webkit-scrollbar {
   width: 5px;

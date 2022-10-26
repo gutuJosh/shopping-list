@@ -13,7 +13,7 @@ function SaveBtn(props) {
 
   useEffect(() => {
     if (!loaded) {
-      element.current.addEventListener("transitionend", addAnimation);
+      //element.current.addEventListener("transitionend", addAnimation);
     }
     if (!navigator.onLine) {
       setLabel(false);

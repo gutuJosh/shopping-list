@@ -25,16 +25,17 @@ function ListItemDetails(props) {
         <input
           type="text"
           value={qty}
+          inputMode="numeric"
           onChange={(e) => setQty(formatValue(e.target.value))}
           onClick={(e) => e.stopPropagation()}
         />
       </label>
       <label className="flex-item auto pad-x-10">
         <span className="inline-block">{t("Price per item")}:</span>
-
         <input
           type="text"
           value={price}
+          inputMode="numeric"
           placeholder={`x 1 ${t("item")}`}
           onChange={(e) => setPrice(formatValue(e.target.value))}
           onClick={(e) => e.stopPropagation()}
@@ -52,7 +53,6 @@ function ListItemDetails(props) {
               status: props.data.status,
             });
             setTimeout(() => {
-              props.resetUlHeight({});
               e.target.parentNode.closest("li").classList.remove("active");
             }, 300);
           }}
