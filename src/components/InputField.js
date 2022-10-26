@@ -3,11 +3,15 @@ let delay;
 function InputField(props) {
   const [inputValue, setInputValue] = useState("");
   const element = useRef(null);
+  const checksign = useRef(null);
 
   const saveNewItem = () => {
     clearTimeout(delay);
-    props.handleInputValue(inputValue);
+    const value = inputValue;
+    props.handleInputValue(value);
     setInputValue("");
+    checksign.current.classList.add("show");
+    setTimeout(() => checksign.current.classList.remove("show"), 1500);
   };
 
   useEffect(() => {
@@ -53,6 +57,9 @@ function InputField(props) {
               }
             }}
           />
+          <svg className="icn checksign-icon" ref={checksign}>
+            <use href="#checksign-icon"></use>
+          </svg>
         </div>
         <div className="pad10 pad-x-10">
           <button

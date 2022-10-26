@@ -715,7 +715,6 @@ footer {
 
 .new-item-container {
   width: 100%;
-  max-width: 800px;
   position: fixed;
   top: -140px;
   left: 50%;
@@ -737,6 +736,23 @@ footer {
   border-radius: 10px;
   background-color: var(--dark-grey);
   color: #fff;
+}
+.new-item-container .flex-item {
+  position: relative;
+}
+.checksign-icon {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.checksign-icon.show {
+  opacity: 1;
 }
 
 .new-item-container button {

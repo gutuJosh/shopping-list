@@ -247,9 +247,12 @@ function Home() {
         className={`add-new-item ${action}`}
         onClick={() => {
           handlers.handleOnClick(() => {
+            const ul = document.querySelector(".shopping-list");
             if (!showInput) {
+              ul.style.height = ul.offsetHeight + "px";
               setShowInput(true);
             } else {
+              ul.removeAttribute("style");
               setShowInput(false);
               setAction("");
               if (newItemValue) {
