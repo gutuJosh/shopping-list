@@ -29,9 +29,9 @@
   "Uncompleted": "Inachevé",
   "Total cost": "Coût total",
   "Price per item": "Prix ​​par article",
-  "Items number": "Nombre d'articles",
+  "Items number": "N° articles",
   "OK": "OK",
-  "Tap for a text note | Tap & hold for a voice note": "Appuyez pour une note textuelle | Toucher et maintenir pour une note vocale",
+  "Tap for a text note | Tap & hold for a voice note": "Toucher et maintenir pour une note vocale",
   "Microphone permission already given!": "Autorisation micro déjà donnée!",
   "You are offline! Using Speech Recognition involves a server-based recognition engine.": "Tu es hors ligne! L'utilisation de la reconnaissance vocale implique un moteur de reconnaissance basé sur un serveur."
 }

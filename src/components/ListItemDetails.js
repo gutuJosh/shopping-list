@@ -12,16 +12,6 @@ function ListItemDetails(props) {
     return getValue;
   };
 
-  const blockUlHeight = (e) => {
-    const ul = e.target.closest("ul");
-    ul.style.height = ul.offsetHeight + "px";
-  };
-
-  const unblockUlHeight = (e) => {
-    const ul = e.target.closest("ul");
-    ul.removeAttribute("style");
-  };
-
   useEffect(() => {
     setQty(props.data.qty);
     setPrice(props.data.price);
@@ -37,7 +27,6 @@ function ListItemDetails(props) {
           value={qty}
           onChange={(e) => setQty(formatValue(e.target.value))}
           onClick={(e) => e.stopPropagation()}
-          onFocus={(e) => blockUlHeight(e)}
         />
       </label>
       <label className="flex-item auto pad-x-10">
@@ -46,9 +35,9 @@ function ListItemDetails(props) {
         <input
           type="text"
           value={price}
+          placeholder="x 1"
           onChange={(e) => setPrice(formatValue(e.target.value))}
           onClick={(e) => e.stopPropagation()}
-          onFocus={(e) => blockUlHeight(e)}
         />
       </label>
       <label className="pad-x-10">
@@ -64,7 +53,6 @@ function ListItemDetails(props) {
             });
             setTimeout(() => {
               e.target.parentNode.closest("li").classList.remove("active");
-              unblockUlHeight(e);
             }, 300);
           }}
         >

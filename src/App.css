@@ -446,6 +446,7 @@ ul {
 }
 .shopping-list {
   height: calc(100vh - 340px);
+  min-height: calc(100% - 340px);
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 20px;
@@ -454,6 +455,7 @@ ul {
 }
 .shopping-list.main-list {
   height: calc(100vh - 300px);
+  min-height: calc(100% - 340px);
 }
 .shopping-list::-webkit-scrollbar {
   width: 5px;
@@ -754,6 +756,10 @@ footer {
 }
 .setting-list li.active .item-details {
   margin: 20px 0 0 0;
+}
+.setting-list .custom-check input:checked ~ span.txt {
+  text-decoration: none;
+  color: #fff;
 }
 
 input.switch {

@@ -36,6 +36,7 @@ function InputField(props) {
 
         <div className="flex-item auto">
           <input
+            id="new-item-field"
             type="text"
             autoFocus={true}
             autoComplete="off"
@@ -59,6 +60,7 @@ function InputField(props) {
               e.preventDefault();
               props.captureValue(false);
               saveNewItem();
+              document.querySelector("#new-item-field").focus();
             }}
           >
             {props.btnLabel}

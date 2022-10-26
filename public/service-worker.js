@@ -1,4 +1,4 @@
-const version = "V1.0.1";
+const version = "V1.0.2";
 const offlineCacheName = "offline" + version;
 
 const cacheList = [offlineCacheName];
@@ -12,7 +12,6 @@ const offlineAppFiles = [
   "/images/logo-192.png",
   "/images/logo-512.png",
   "manifest.json",
-  "/static/js/bundle.js",
   "service-worker.js",
   "index.html",
 ];

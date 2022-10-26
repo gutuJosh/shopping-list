@@ -45,7 +45,7 @@ class indexedDbManager {
     return new Promise((resolve, reject) => {
       //Open Database
       const version = this.setDbVersion(this.dbVersion + 1);
-      console.log("I try to open the database version " + version);
+      //console.log("I try to open the database version " + version);
       const request = indexedDB.open(this.dbName, version);
 
       request.onerror = (event) => {
@@ -56,11 +56,11 @@ class indexedDbManager {
       };
 
       request.onsuccess = (event) => {
-        console.log("Wtf am I doing here? ");
+        //console.log("Wtf am I doing here? ");
       };
 
       request.onupgradeneeded = (event) => {
-        console.log("I try to update the db version " + this.dbVersion);
+        //console.log("I try to update the db version " + this.dbVersion);
         this.db = event.target.result;
 
         //create user's table
@@ -131,9 +131,9 @@ class indexedDbManager {
               //console.log("Item id:" + data.id + "was saved");
             };
             req.onerror = (event) => {
-              console.log(
+              /*console.log(
                 "Item id:" + data.id + "was not saved do to " + event.message
-              );
+              );*/
             };
           });
         } else {
@@ -265,7 +265,7 @@ class indexedDbManager {
             }
           };
         } catch (e) {
-          console.log(e.message);
+          //console.log(e.message);
         }
       };
     });
@@ -403,17 +403,23 @@ class indexedDbManager {
               .then((resp) => {
                 this.setDbVersion(1);
                 this.getMetadata()
-                  .then((resp) => console.log(resp))
-                  .catch((e) => console.log(e.message));
+                  .then((resp) => {
+                    /*console.log(resp)*/
+                  })
+                  .catch((e) => {
+                    /*console.log(e.message)*/
+                  });
               })
-              .catch((e) => console.log(e.message));
+              .catch((e) => {
+                /*console.log(e.message)*/
+              });
           }
           resolve({
             status: "ok",
             msg: "Database " + tableName + " was successfully deleted!",
           });
         } catch (e) {
-          console.log(e);
+          //console.log(e);
           this.db.close();
           reject({
             status: "ko",

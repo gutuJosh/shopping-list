@@ -111,12 +111,15 @@
     <script>
       if (navigator.serviceWorker) {
         //Uninnstall service worker
-        /*navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for(let registration of registrations) {
+        /*navigator.serviceWorker
+          .getRegistrations()
+          .then(function (registrations) {
+            for (let registration of registrations) {
               //registration.unregister()
-            } 
+            }
           });*/
 
+        //Innstall service worker
         navigator.serviceWorker
           .register("%PUBLIC_URL%/service-worker.js")
           .then(function (sw) {

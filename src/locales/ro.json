@@ -29,9 +29,9 @@
   "Uncompleted": "Incomplete",
   "Total cost": "Preț total produse",
   "Price per item": "Preț produs",
-  "Items number": "Numărul de produse",
+  "Items number": "Nr. produse",
   "OK": "OK",
-  "Tap for a text note | Tap & hold for a voice note": "Apasă pentru a introduce text | Apasă lung pentru comanada vocală",
+  "Tap for a text note | Tap & hold for a voice note": "Apasă lung pentru comanada vocală",
   "Microphone permission already given!": "Permisiunea pentru microfon a fost deja acordată!",
   "You are offline! Using Speech Recognition involves a server-based recognition engine.": "Esti deconectat de la rețea! Utilizarea microfonului implică un motor de recunoaștere vocală bazat pe server."
 }

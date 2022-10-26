@@ -242,7 +242,7 @@ function Home() {
       )}
       <SaveBtn
         btnlabel={t("Save")}
-        tip={t("Tap for a text note | Tap & hold for a voice note")}
+        tip={t("Tap & hold for a voice note")}
         title={t("Add new list")}
         className={`add-new-item ${action}`}
         onClick={() => {
