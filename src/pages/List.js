@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import ListItemDetails from "../components/ListItemDetails";
 import InputField from "../components/InputField";
 import ListItem from "../components/ListItem";
@@ -41,7 +35,6 @@ function List() {
   const [showInput, setShowInput] = useState(false);
   const [itemStatus, setItemStatus] = useState(0);
   const [newItemValue, setNewItemValue] = useState(false);
-  const shoppingList = useRef(null);
   const [listItems, dispatchList] = useDatabase(
     state.currentList.name,
     dataBaseManager,
@@ -90,14 +83,6 @@ function List() {
           items.push(itemToAdd);
           setListItems(items);
           updateMetadata(state.currentList, items);
-          try {
-            shoppingList.current.lastChild.scrollIntoView({
-              block: "start",
-              behavior: "smooth",
-            });
-          } catch (e) {
-            /*console.log(e.message)*/
-          }
         }
       })
       .catch((err) => {
@@ -127,14 +112,6 @@ function List() {
             const items = listItems.filter((item) => item.name !== name);
             setListItems(items);
             updateMetadata(state.currentList, items);
-            try {
-              shoppingList.current.lastChild.scrollIntoView({
-                block: "end",
-                behavior: "smooth",
-              });
-            } catch (e) {
-              /*console.log(e.message)*/
-            }
           }
         })
         .catch((err) => {
@@ -318,7 +295,7 @@ function List() {
         translator={t}
       />
       {listItems !== false && (
-        <ul className="shopping-list all-lists pad-x-20" ref={shoppingList}>
+        <ul className="shopping-list all-lists pad-x-20">
           {listItems.map((item, i) => (
             <ListItem
               index={i}
@@ -341,10 +318,14 @@ function List() {
                       e.stopPropagation();
                       e.target.closest("li").classList.toggle("active");
                       try {
-                        e.target.closest("li").scrollIntoView({
-                          block: "start",
-                          behavior: "smooth",
-                        });
+                        setTimeout(
+                          () =>
+                            e.target.closest("li").scrollIntoView({
+                              block: "start",
+                              behavior: "smooth",
+                            }),
+                          350
+                        );
                       } catch (e) {
                         /*console.log(e.message)*/
                       }

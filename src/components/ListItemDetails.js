@@ -18,7 +18,7 @@ function ListItemDetails(props) {
   }, [props.data]);
 
   return (
-    <div className="item-details flex">
+    <form className="item-details flex">
       <label className="flex-item auto pad-x-10">
         <span className="inline-block">{t("Items number")}:</span>
 
@@ -45,6 +45,7 @@ function ListItemDetails(props) {
         <button
           className="pad-x-20"
           onClick={(e) => {
+            e.preventDefault();
             props.update(props.data.name, {
               id: props.data.id,
               name: props.data.name,
@@ -60,7 +61,7 @@ function ListItemDetails(props) {
           {t("OK")}
         </button>
       </label>
-    </div>
+    </form>
   );
 }
 

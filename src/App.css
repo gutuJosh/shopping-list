@@ -446,16 +446,17 @@ ul {
   position: relative;
 }
 .shopping-list {
-  height: calc(100vh - 340px);
+  height: calc(100vh - 360px);
+  max-height: calc(100vh - 360px);
   min-height: 128px;
   overflow-y: auto;
   overflow-x: hidden;
-  margin-top: 20px;
+  margin: 20px 0 20px 0;
   scrollbar-width: thin;
-  padding-bottom: 60px;
 }
 .shopping-list.main-list {
-  height: calc(100vh - 300px);
+  height: calc(100vh - 320px);
+  max-height: calc(100vh - 320px);
   min-height: 140px;
 }
 .shopping-list.setting-list {
@@ -730,7 +731,7 @@ footer {
 .new-item-container.active {
   top: 0px;
 }
-.new-item-container > div {
+.new-item-container > form {
   max-height: 50px;
   margin: 20px 0;
 }

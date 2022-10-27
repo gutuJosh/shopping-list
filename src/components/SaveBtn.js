@@ -1,20 +1,10 @@
 /* global navigator */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 function SaveBtn(props) {
-  const element = useRef(null);
-  const [loaded, setLoaded] = useState(false);
   const [label, setLabel] = useState(props.tip);
 
-  const addAnimation = () => {
-    element.current.classList.add("animated");
-    setLoaded(true);
-  };
-
   useEffect(() => {
-    if (!loaded) {
-      //element.current.addEventListener("transitionend", addAnimation);
-    }
     if (!navigator.onLine) {
       setLabel(false);
     }
@@ -22,7 +12,7 @@ function SaveBtn(props) {
 
   return (
     <footer className="pad-x-20">
-      <button {...props} ref={element}>
+      <button {...props}>
         <span className="title-default">+ {props.title}</span>
         <span className="title-clicked">{props.btnlabel}</span>
         <span className="title-audio-end">

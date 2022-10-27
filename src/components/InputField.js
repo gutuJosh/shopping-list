@@ -19,7 +19,7 @@ function InputField(props) {
   }, []);
   return (
     <div className="new-item-container pad20" ref={element}>
-      <div className="flex">
+      <form className="flex">
         <a
           className="close-icon"
           href="#"
@@ -75,7 +75,7 @@ function InputField(props) {
             {props.btnLabel}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContextProvider";
 import handleDisplay from "../helpers/HandleDisplay";
 import dataBaseManager from "../indexedDbManager";
@@ -20,7 +20,6 @@ function Home() {
   const [showInput, setShowInput] = useState(false);
   const [newItemValue, setNewItemValue] = useState(false);
   const [filter, setFilter] = useState(0);
-  const shoppingList = useRef(null);
   const [lists, setList] = useDatabase(
     state.currentList,
     dataBaseManager,
@@ -63,14 +62,6 @@ function Home() {
         const getLists = [...lists];
         getLists.push(newItem);
         setList(getLists);
-        try {
-          shoppingList.current.lastChild.scrollIntoView({
-            block: "start",
-            behavior: "smooth",
-          });
-        } catch (e) {
-          /*console.log(e.message)*/
-        }
         return dbManager.insertData("metadata", newItem);
       })
       .then((resp) => {
@@ -104,13 +95,9 @@ function Home() {
                 .removeRow("metadata", name)
                 .then((resp) => {
                   /*console.log(resp)*/
-                  shoppingList.current.scrollTo(
-                    0,
-                    shoppingList.current.scrollHeight - 100
-                  );
                 })
                 .catch((err) => {
-                  /*console.log(err)*/
+                  /*console.log(err.message)*/
                 });
             }
           }
@@ -218,10 +205,7 @@ function Home() {
       )}
       <FilterBtns handleClick={handleFilters} translator={t} />
       {lists !== false && (
-        <ul
-          className="shopping-list all-lists main-list pad-x-20"
-          ref={shoppingList}
-        >
+        <ul className="shopping-list all-lists main-list pad-x-20">
           {lists.map((item, i) => (
             <ListItem
               index={i}

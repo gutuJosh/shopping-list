@@ -191,6 +191,16 @@ function ListItem(props) {
       setElementTopPosition(element.current);
       document.addEventListener("contextmenu", disableContextMenu);
     }
+    try {
+      element.current.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
+    } catch (e) {
+      element.current
+        .closest("ul")
+        .scrollTo(0, element.current.closest("ul").scrollHeight - 100);
+    }
     return () => {
       window.removeEventListener("mousemove", handleDragg);
       document.removeEventListener("contextmenu", disableContextMenu);
