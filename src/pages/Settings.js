@@ -86,7 +86,7 @@ function Settings() {
                     <input
                       type="radio"
                       defaultChecked={lang.indexOf(item) !== -1 ? true : false}
-                      value={`${item}-`}
+                      value={`${item}-${item.toUpperCase()}`}
                       id={`${item}-btn`}
                       name="language"
                       onChange={(e) => {

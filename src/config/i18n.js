@@ -41,7 +41,7 @@ i18n
       escapeValue: false, // react already safes from xss
       unescapePrefix: "-",
     },
-    fallbackLng: false,
+    fallbackLng: "en",
     debug: false,
     // have a common namespace used around the full app
     saveMissing: false,
