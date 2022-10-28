@@ -4,7 +4,7 @@ import { AppContextProvider } from "./context/AppContextProvider";
 import Home from "./pages/Home";
 import List from "./pages/List";
 import Settings from "./pages/Settings";
-import PageContainer from "./PageContainer";
+import PageContainer from "./components/PageContainer";
 import "./App.css";
 
 function App() {

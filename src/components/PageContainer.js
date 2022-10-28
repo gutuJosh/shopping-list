@@ -1,6 +1,6 @@
 import React from "react";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
-import Header from "./components/Header";
+import Header from "./Header";
 
 const PageContainer = (
   WrappedComponent,
