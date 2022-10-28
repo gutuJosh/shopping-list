@@ -32,7 +32,7 @@
   "Price per item": "Prezzo",
   "Items number": "N° prodotti",
   "OK": "OK",
-  "Tap for a text note | Tap & hold for a voice note": "Tocca e tieni premuto per una nota vocale",
+  "Tap & hold for a voice note": "Tocca e tieni premuto per una nota vocale",
   "Microphone permission already given!": "Autorizzazione microfono già data!",
   "You are offline! Using Speech Recognition involves a server-based recognition engine.": "Sei offline! L'uso del microfono implica un motore di riconoscimento vocale basato su server."
 }

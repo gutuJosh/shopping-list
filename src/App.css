@@ -461,6 +461,7 @@ ul {
 }
 .shopping-list.setting-list {
   height: calc(100vh - 120px);
+  max-height: calc(100vh - 120px);
 }
 .shopping-list::-webkit-scrollbar {
   width: 5px;
