@@ -73,5 +73,16 @@ const StorageManager = {
       return false;
     }
   },
+
+  setCookie: function (cname, cvalue, exdays, cpath) {
+    /*the name of the cookie (cname), the value of the cookie (cvalue), 
+    the number of days until the cookie should expire (exdays), the path the cookie belongs to (cpath)*/
+    let d = new Date();
+    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    var expires = "expires=" + d.toUTCString();
+    document.cookie =
+      cname + "=" + cvalue + ";" + expires + ";path=" + cpath + "";
+    return true;
+  },
 };
 export default StorageManager;

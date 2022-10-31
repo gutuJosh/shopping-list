@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import i18n from "../config/i18n";
 import i18SupportedLanguages from "../config/i18SupportedLanguages";
+import StorageManager from "../helpers/StorageManager";
+
 const useLanguage = () => {
   const [language, setLanguage] = useState(i18n.language);
 
@@ -12,6 +14,7 @@ const useLanguage = () => {
         : "en-US"
     );
     i18n.changeLanguage(getLanguage);
+    StorageManager.setCookie("i18next", getLanguage, 365, "/");
   }
 
   useEffect(() => {
