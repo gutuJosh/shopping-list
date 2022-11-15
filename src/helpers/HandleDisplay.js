@@ -25,6 +25,11 @@ const handleDisplay = (delay, status) => {
       }, i * delay);
       i++;
     }
+    if (i === getItems.length) {
+      setTimeout(() => {
+        item.closest("ul").classList.remove("blocked");
+      }, (i + 1) * delay);
+    }
   });
 };
 

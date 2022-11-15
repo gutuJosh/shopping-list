@@ -39,7 +39,9 @@ function CustomCheckBox(props) {
             });
           }}
         />
-        <span className="txt">{props.name.trim()}</span>
+        <span className="txt">
+          {props.name.trim()} <span>({props.qty})</span>
+        </span>
         <span className="checkmark"></span>
       </label>
     </div>

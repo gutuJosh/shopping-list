@@ -205,7 +205,7 @@ function Home() {
       )}
       <FilterBtns handleClick={handleFilters} translator={t} />
       {lists !== false && (
-        <ul className="shopping-list all-lists main-list pad-x-20">
+        <ul className="shopping-list all-lists main-list pad-x-20 blocked">
           {lists.map((item, i) => (
             <ListItem
               index={i}

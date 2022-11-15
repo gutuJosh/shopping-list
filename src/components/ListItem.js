@@ -29,6 +29,7 @@ function ListItem(props) {
   };
 
   const handleMouseDown = (e) => {
+    return;
     if (element.current.classList.contains("active")) {
       return;
     }
@@ -54,6 +55,7 @@ function ListItem(props) {
   };
 
   const handleMouseUp = (e) => {
+    return;
     if (e.changedTouches === undefined) {
       e.preventDefault();
     }
@@ -75,6 +77,7 @@ function ListItem(props) {
     touchStartY = oldY;
     element.current.parentNode.classList.add("draggable");
     if (!element.current.classList.contains("dragg-active")) {
+      element.current.classList.remove("show");
       element.current.classList.add("dragg-active");
     }
     let coordinates = data;
@@ -83,6 +86,7 @@ function ListItem(props) {
   };
 
   const disableDragg = () => {
+    element.current.classList.add("show");
     element.current.classList.remove("dragg-active");
     element.current.parentNode.classList.remove("draggable");
     removeClass("move-up");
@@ -127,6 +131,7 @@ function ListItem(props) {
   };
 
   const handleMouseEnter = (e) => {
+    return;
     if (!element.current.parentNode.classList.contains("draggable")) {
       return;
     }
@@ -152,6 +157,7 @@ function ListItem(props) {
   };
 
   const handleTouchEnter = (e) => {
+    return;
     if (e.changedTouches) {
       const htmlItem = document.elementFromPoint(
         e.changedTouches[0].clientX,
