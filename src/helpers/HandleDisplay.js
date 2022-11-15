@@ -8,7 +8,7 @@ const handleTransitionEnd = () => {
 };
 
 const handleDisplay = (delay, status) => {
-  const getItems = document.querySelectorAll(".all-lists li");
+  const getItems = document.querySelectorAll(".all-lists li:not(.show)");
   if (getItems.length === 0) {
     setTimeout(() => {
       handleDisplay(delay, status);
@@ -18,13 +18,11 @@ const handleDisplay = (delay, status) => {
 
   let i = 1;
   getItems.forEach((item) => {
-    if (!item.classList.contains("show")) {
-      setTimeout(() => {
-        item.classList.add("show", "show-enter");
-        item.addEventListener("transitionend", handleTransitionEnd);
-      }, i * delay);
-      i++;
-    }
+    setTimeout(() => {
+      item.classList.add("show", "show-enter");
+      item.addEventListener("transitionend", handleTransitionEnd);
+    }, i * delay);
+    i++;
   });
 };
 
