@@ -21,12 +21,16 @@ const handleDisplay = (delay, status) => {
     setTimeout(() => {
       item.classList.add("show", "show-enter");
       item.addEventListener("transitionend", handleTransitionEnd);
+      document.querySelector(".shopping-list").scrollTo(0, 0);
     }, i * delay);
     i++;
   });
 
   setTimeout(() => {
     document.querySelector(".shopping-list").classList.remove("blocked");
+    document
+      .querySelector(".shopping-list li:last-child")
+      .scrollIntoView({ behavior: "smooth", block: "end" });
   }, (getItems.length + getItems.length * 0.6) * (delay + 0.6));
 };
 
