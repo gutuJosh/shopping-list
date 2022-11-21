@@ -24,6 +24,10 @@ const handleDisplay = (delay, status) => {
     }, i * delay);
     i++;
   });
+
+  setTimeout(() => {
+    document.querySelector(".shopping-list").classList.remove("blocked");
+  }, (getItems.length + getItems.length * 0.6) * (delay + 0.6));
 };
 
 export default handleDisplay;

@@ -455,7 +455,9 @@ ul {
   margin: 20px 0 20px 0;
   scrollbar-width: thin;
 }
-
+.shopping-list.blocked {
+  overflow-y: hidden;
+}
 .all-lists li {
   transform: translateX(-103%);
 }

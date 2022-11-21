@@ -295,7 +295,7 @@ function List() {
         translator={t}
       />
       {listItems !== false && (
-        <ul className="shopping-list all-lists pad-x-20">
+        <ul className="shopping-list all-lists pad-x-20 blocked">
           {listItems.map((item, i) => (
             <ListItem
               index={i}
