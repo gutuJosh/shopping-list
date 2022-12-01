@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 //custom hook to load data from db
-const useDatabase = (list, dataBaseManager, filter) => {
+const useDatabase = (list, dataBaseManager, filter, dispatcher = false) => {
   const [listItems, setListItems] = useState(false);
 
   function dispatchList(data) {
@@ -11,6 +11,12 @@ const useDatabase = (list, dataBaseManager, filter) => {
       setListItems(data.filter((item) => item.status !== 1));
     } else {
       setListItems(data);
+    }
+    if (dispatcher) {
+      dispatcher({
+        type: "ASSIGN_ITEMS",
+        payload: data,
+      });
     }
   }
 

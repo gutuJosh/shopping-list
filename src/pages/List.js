@@ -7,6 +7,7 @@ import FilterBtns from "../components/FilterBtns";
 import SaveBtn from "../components/SaveBtn";
 import handleDisplay from "../helpers/HandleDisplay";
 import { AppContext } from "../context/AppContextProvider";
+import { ListsContext } from "../context/ListsContextProvider";
 import dataBaseManager from "../indexedDbManager";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../helpers/FormatDate";
@@ -32,13 +33,15 @@ const calculateTotal = (items) => {
 function List() {
   let dbManager = dataBaseManager;
   const [state, dispatch] = useContext(AppContext);
+  const [listState, dispatcher] = useContext(ListsContext);
   const [showInput, setShowInput] = useState(false);
   const [itemStatus, setItemStatus] = useState(0);
   const [newItemValue, setNewItemValue] = useState(false);
   const [listItems, dispatchList] = useDatabase(
     state.currentList.name,
     dataBaseManager,
-    itemStatus
+    itemStatus,
+    dispatcher
   );
   const { action, setAction, handlers } = useLongPress(600);
   const { t } = useTranslation();
@@ -82,7 +85,13 @@ function List() {
           const items = [...listItems];
           items.push(itemToAdd);
           setListItems(items);
-          updateMetadata(state.currentList, items);
+          const listStore = [...listState.items];
+          listStore.push(itemToAdd);
+          dispatcher({
+            type: "ADD_ITEM",
+            payload: itemToAdd,
+          });
+          updateMetadata(state.currentList, listStore);
         }
       })
       .catch((err) => {
@@ -111,7 +120,15 @@ function List() {
           if (resp.status === "ok") {
             const items = listItems.filter((item) => item.name !== name);
             setListItems(items);
-            updateMetadata(state.currentList, items);
+            const listStore = [
+              ...listState.items.filter((item) => item.name !== name),
+            ];
+            dispatcher({
+              type: "REMOVE_ITEM",
+              payload: name,
+            });
+
+            updateMetadata(state.currentList, listStore);
           }
         })
         .catch((err) => {
@@ -131,9 +148,18 @@ function List() {
             }
             return item;
           });
-
+          const listStore = listState.items.map((item) => {
+            if (item.id === newValue.id) {
+              item = newValue;
+            }
+            return item;
+          });
           dispatchList(getItems);
-          updateMetadata(state.currentList, getItems);
+          dispatcher({
+            type: "UPDATE_ITEMS",
+            payload: newValue,
+          });
+          updateMetadata(state.currentList, listStore);
         } else {
           alert(t(resp));
         }
@@ -142,8 +168,8 @@ function List() {
   };
 
   const getListStatus = () => {
-    let status = listItems.length === 0 ? 0 : 1;
-    let compleatedTask = listItems.filter((item) => item.status === 0);
+    let status = listState.length === 0 ? 0 : 1;
+    let compleatedTask = listState.items.filter((item) => item.status === 0);
     if (compleatedTask.length > 0) {
       status = 0;
     }
@@ -246,6 +272,10 @@ function List() {
         dbManager = null;
       }*/
       dbManager = null;
+      dispatcher({
+        type: "DELETE_ITEMS",
+        payload: [],
+      });
     };
   }, []);
 
@@ -264,7 +294,7 @@ function List() {
       <h1 className="pad-x-20">
         {state.currentList.name}{" "}
         <span>
-          ({state.currentList.records}) {t("items")}
+          ({listState.items.length}) {t("items")}
         </span>
       </h1>
       {listItems !== false && (
