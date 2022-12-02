@@ -6,6 +6,7 @@ import CustomCheckBox from "../components/CustomCheckBox";
 import FilterBtns from "../components/FilterBtns";
 import SaveBtn from "../components/SaveBtn";
 import handleDisplay from "../helpers/HandleDisplay";
+import StorageManager from "../helpers/StorageManager";
 import { AppContext } from "../context/AppContextProvider";
 import { ListsContext } from "../context/ListsContextProvider";
 import dataBaseManager from "../indexedDbManager";
@@ -77,14 +78,14 @@ function List() {
       typeof itemName === "string"
         ? {
             id: getMaxId + 1,
-            name: itemName.name.trim(),
+            name: getItemName.trim(),
             qty: 1,
             price: "",
             status: 0,
           }
         : {
             id: getMaxId + 1,
-            name: itemName.name.trim(),
+            name: getItemName.trim(),
             qty: itemName.qty,
             price: itemName.price,
             status: 0,
@@ -180,7 +181,7 @@ function List() {
   };
 
   const getListStatus = () => {
-    let status = listState.length === 0 ? 0 : 1;
+    let status = listState.items.length === 0 ? 0 : 1;
     let compleatedTask = listState.items.filter((item) => item.status === 0);
     if (compleatedTask.length > 0) {
       status = 0;
@@ -196,6 +197,7 @@ function List() {
       records: list.length,
       status: getListStatus(),
     };
+
     const response = await dbManager.updateRow("metadata", "name", data);
     if (response.status === "ok") {
       dispatch({
@@ -288,6 +290,7 @@ function List() {
         type: "DELETE_ITEMS",
         payload: [],
       });
+      StorageManager.removeSession("listInitialize");
     };
   }, []);
 

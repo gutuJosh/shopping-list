@@ -1,4 +1,5 @@
 import React, { useReducer, createContext } from "react";
+import StorageManager from "../helpers/StorageManager";
 
 export const ListsContext = createContext();
 
@@ -9,10 +10,16 @@ const initialState = {
 const reducer = (listState, action) => {
   switch (action.type) {
     case "ASSIGN_ITEMS":
-      return {
-        items:
-          listState.items.length === 0 ? [...action.payload] : listState.items,
-      };
+      if (StorageManager.getSession("listInitialize")) {
+        return {
+          items: listState.items,
+        };
+      } else {
+        StorageManager.setSession("listInitialize", 1);
+        return {
+          items: [...action.payload],
+        };
+      }
     case "UPDATE_ITEMS":
       return {
         items: listState.items.map((item) => {
@@ -25,6 +32,7 @@ const reducer = (listState, action) => {
     case "ADD_ITEM":
       const listItems = listState.items;
       listItems.push(action.payload);
+
       return {
         items: [...listItems],
       };

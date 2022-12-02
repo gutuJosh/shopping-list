@@ -19,17 +19,13 @@ function NewItemForm(props) {
       const value = inputValue;
       props.handleInputValue(value);
     } else {
-      if (qty === "" && price === "") {
-        props.handleInputValue(inputValue);
-      } else {
-        props.handleInputValue({
-          name: inputValue,
-          qty: qty,
-          price: price,
-        });
-        setQty("");
-        setPrice("");
-      }
+      props.handleInputValue({
+        name: inputValue,
+        qty: qty === "" ? 1 : qty,
+        price: price,
+      });
+      setQty("");
+      setPrice("");
     }
     setInputValue("");
     checksign.current.classList.add("show");
