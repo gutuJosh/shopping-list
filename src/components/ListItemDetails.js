@@ -1,16 +1,10 @@
 import { useState, useEffect } from "react";
+import formatNumeric from "../helpers/FormatNumeric";
 
 function ListItemDetails(props) {
   const [qty, setQty] = useState();
   const [price, setPrice] = useState();
   const t = props.translator;
-  const formatValue = (data) => {
-    let getValue = data.replace(/[a-zA-Z]/g, "").replace(/,/g, ".");
-    if (isNaN(getValue)) {
-      getValue = 0;
-    }
-    return getValue;
-  };
 
   useEffect(() => {
     setQty(props.data.qty);
@@ -26,7 +20,7 @@ function ListItemDetails(props) {
           type="text"
           value={qty}
           inputMode="numeric"
-          onChange={(e) => setQty(formatValue(e.target.value))}
+          onChange={(e) => setQty(formatNumeric(e.target.value))}
           onClick={(e) => e.stopPropagation()}
         />
       </label>
@@ -37,7 +31,7 @@ function ListItemDetails(props) {
           value={price}
           inputMode="numeric"
           placeholder={`x 1 ${t("item")}`}
-          onChange={(e) => setPrice(formatValue(e.target.value))}
+          onChange={(e) => setPrice(formatNumeric(e.target.value))}
           onClick={(e) => e.stopPropagation()}
         />
       </label>

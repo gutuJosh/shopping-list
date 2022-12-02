@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContextProvider";
 import handleDisplay from "../helpers/HandleDisplay";
 import dataBaseManager from "../indexedDbManager";
-import InputField from "../components/InputField";
+import NewItemForm from "../components/NewItemForm";
 import SaveBtn from "../components/SaveBtn";
 import FilterBtns from "../components/FilterBtns";
 import RadioButton from "../components/RadioButton";
@@ -192,7 +192,7 @@ function Home() {
       {appStatus && <h2>Loading ...</h2>}
       <h1 className="pad-x-20">{t("My Lists")}</h1>
       {showInput === true && (
-        <InputField
+        <NewItemForm
           btnLabel={t("Save")}
           placeholder={t("Insert list name")}
           handleInputValue={createList}
@@ -201,6 +201,8 @@ function Home() {
             setAction("");
           }}
           captureValue={setNewItemValue}
+          page="home"
+          translator={t}
         />
       )}
       <FilterBtns handleClick={handleFilters} translator={t} />

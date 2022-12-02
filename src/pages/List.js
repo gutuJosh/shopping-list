@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import ListItemDetails from "../components/ListItemDetails";
-import InputField from "../components/InputField";
+import NewItemForm from "../components/NewItemForm";
 import ListItem from "../components/ListItem";
 import CustomCheckBox from "../components/CustomCheckBox";
 import FilterBtns from "../components/FilterBtns";
@@ -52,17 +52,20 @@ function List() {
   const setListItems = (items) => dispatchList(items);
 
   const addItem = (itemName) => {
-    if (itemName === "") {
+    const getItemName = typeof itemName === "string" ? itemName : itemName.name;
+
+    if (getItemName === "") {
       return;
     }
 
     const duplicateItem = listItems.filter(
-      (item) => item.name.toLowerCase() === itemName.toLowerCase()
+      (item) => item.name.toLowerCase() === getItemName.toLowerCase()
     );
     if (duplicateItem.length > 0) {
       alert(t("Item name already exists!"));
       return;
     }
+
     const getMaxId = listItems.reduce((sum, item) => {
       if (item.id > sum) {
         sum = item.id;
@@ -70,13 +73,22 @@ function List() {
       return sum;
     }, 0);
 
-    const itemToAdd = {
-      id: getMaxId + 1,
-      name: itemName.trim(),
-      qty: 1,
-      price: "",
-      status: 0,
-    };
+    const itemToAdd =
+      typeof itemName === "string"
+        ? {
+            id: getMaxId + 1,
+            name: itemName.name.trim(),
+            qty: 1,
+            price: "",
+            status: 0,
+          }
+        : {
+            id: getMaxId + 1,
+            name: itemName.name.trim(),
+            qty: itemName.qty,
+            price: itemName.price,
+            status: 0,
+          };
 
     dbManager
       .insertData(state.currentList.name, itemToAdd)
@@ -308,7 +320,7 @@ function List() {
         </div>
       )}
       {showInput === true && (
-        <InputField
+        <NewItemForm
           btnLabel={t("Save")}
           placeholder={t("Add item")}
           handleInputValue={addItem}
@@ -317,6 +329,8 @@ function List() {
             setAction("");
           }}
           captureValue={setNewItemValue}
+          page="list"
+          translator={t}
         />
       )}
       <FilterBtns
