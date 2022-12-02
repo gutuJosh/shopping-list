@@ -44,7 +44,7 @@ function NewItemForm(props) {
       <form className={props.page === "home" ? "flex" : "flex flex-column"}>
         <a
           className="close-icon"
-          href="#"
+          href="/"
           title="Delete"
           onClick={(e) => {
             e.preventDefault();
