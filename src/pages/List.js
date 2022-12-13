@@ -49,7 +49,10 @@ function List() {
   let navigate = useNavigate();
   const [language] = useLanguage();
   const [micResult, dispatchSpeach] = useMicrophone(language, true);
-  const totalPrice = useCallback(() => calculateTotal(listItems), [listItems]);
+  const totalPrice = useCallback(
+    () => calculateTotal(listState.items),
+    [listState]
+  );
   const setListItems = (items) => dispatchList(items);
 
   const addItem = (itemName) => {
@@ -161,11 +164,12 @@ function List() {
             }
             return item;
           });
-          const listStore = listState.items.map((item) => {
+          const listStore = [];
+          listState.items.forEach((item) => {
             if (item.id === newValue.id) {
               item = newValue;
             }
-            return item;
+            listStore.push(item);
           });
           dispatchList(getItems);
           dispatcher({
@@ -180,22 +184,24 @@ function List() {
       .catch((err) => alert(err.message));
   };
 
-  const getListStatus = () => {
-    let status = listState.items.length === 0 ? 0 : 1;
-    let compleatedTask = listState.items.filter((item) => item.status === 0);
+  const getListStatus = (list) => {
+    let status = list.length === 0 ? 0 : 1;
+    let compleatedTask = list.filter((item) => item.status === 0);
     if (compleatedTask.length > 0) {
       status = 0;
     }
+    console.log(compleatedTask);
     return status;
   };
 
   const updateMetadata = async (tableData, list) => {
+    console.log(list);
     const data = {
       id: tableData.id,
       name: tableData.name,
       date: tableData.date,
       records: list.length,
-      status: getListStatus(),
+      status: getListStatus(list),
     };
 
     const response = await dbManager.updateRow("metadata", "name", data);
